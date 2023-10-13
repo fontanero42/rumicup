@@ -73,10 +73,10 @@ const cards = [
   "9-orange",
 ];
 
-const MAX_VALUE = 9;
+export const MAX_VALUE = 9;
 const INITIAL_BANK =7;
-const TUPPLE_THRESHOLD = 3;
-const MIN_SEQUENCE = 3;
+export const TUPPLE_THRESHOLD = 3;
+export const MIN_SEQUENCE = 3;
 
 export function factory() {
   const d1 = new Array();
@@ -112,5 +112,3 @@ export class Card {
   static allColors = ["red", "blue", "black", "orange"];
 }
 
-/*module.exports.factory = factory;
-module.exports.Card = Card ;*/
