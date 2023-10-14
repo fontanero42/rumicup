@@ -25,6 +25,7 @@ export class Find extends Move {
         super(round);
         super.message = "find";
         this.gstate = gstate;
+        this.options = new Array();
     }
 
     execute() {
@@ -40,8 +41,10 @@ export class Find extends Move {
             .concat(l_options)
             .concat(p_options);
         //const options=t_options.concat(p_options);
-        if (options.length > 0) return new Chose(this.round, this.gstate, options);
-        else return new Draw(this.round, this.gstate);
+        /*if (options.length > 0) return new Chose(this.round, this.gstate, options);
+        else return new Draw(this.round, this.gstate);*/
+        this.options=options;
+        return options;
     }
 
     findSequence() {

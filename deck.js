@@ -85,7 +85,6 @@ export function factory() {
   for (const item of cards) {
     do {
       position = Math.floor(Math.random() * cards.length);
-      //console.log(`generator ooo ${position}`);
       m++;
     } while (d1[position] != undefined);
     d1[position] = new Card(item.split("-")[0], item.split("-")[1]);

@@ -52,7 +52,7 @@ class GameState {
  let nx;
 
     do {
-      this.dumpState;
+      this.dumpState();
       machine.execute();
       nx = machine.next(this);
     } while(nx != null);
