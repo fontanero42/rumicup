@@ -28,7 +28,7 @@ class Hand {
 class GameState {
   constructor(test=false) {
     if (test)
-      this.deck = TestCase3;
+      this.deck = TestCase2;
     else 
       this.deck = factory();
     this.hand = new Hand(this.deck);
@@ -59,18 +59,27 @@ class GameState {
   }
 
   dumpState() {
-    this.dumpBank();
-    this.dumpTable();
+    let b=0;
+    let t=0;
+    let d=0;
+    b=this.dumpBank();
+    t=this.dumpTable();
+    d=this.deck.length;
+    let c=b+t+d
+    console.log(b+"bank" +t +"table"+ d + "deck" + "cards="+c);
   }
 
   dumpBank() {
+    let c=0;
     let line = new String();
     console.log("Bank" + "***************************");
     for (const element of this.hand.bank) {
       line = line.concat(element.toString());
+      c++
     }
     console.log(line);
     console.log("***************************");
+    return c;
   }
 
   dumpTable() {
@@ -85,7 +94,7 @@ class GameState {
       console.log(line);
       console.log("============================");
     }
-    console.log(c + "cards")
+    return  c;
   }
 }
 
