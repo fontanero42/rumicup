@@ -91,6 +91,20 @@ export function factory() {
   }
 
   console.log(`trials ${m}`);
+  d1.draw = function(){
+    let card;
+    if(d1.length>0){
+      card=d1.shift();
+      if(d1.length==0)
+     d1.callback();
+    }
+    return card;
+
+  }
+
+  d1.register = function(cb){
+    this.callback = cb;
+  }
   return d1;
 }
 

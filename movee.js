@@ -127,7 +127,8 @@ export  class Surface extends Move {
     fromBank(card) {
       let i;
       i = this.gstate.hand.bank.indexOf(card);
-      this.gstate.hand.bank.splice(i, 1);
+      this.gstate.hand.bank.take(i, 1);
+      //this.gstate.hand.bank.splice(i, 1);
       return i;
     }
   
@@ -169,7 +170,8 @@ export  class Surface extends Move {
       let i;
       for (const card of this.cards) {
         i = this.gstate.hand.bank.indexOf(card);
-        this.gstate.hand.bank.splice(i, 1);
+        this.gstate.hand.bank.take(i, 1);
+        //this.gstate.hand.bank.splice(i, 1);
         collector.push(card);
       }
       this.gstate.table.push(collector);
@@ -207,8 +209,8 @@ export  class Draw extends Move {
     }
   
     draw() {
-      this.gstate.hand.bank.push(this.gstate.deck.shift());
+      this.gstate.hand.bank.push(this.gstate.deck.draw());
       return this.gstate.deck.length;
-    }
+    }                   
   }
   

@@ -3,9 +3,9 @@ import { moveFactory } from "./movee.js";
 const transitions=[
 'start~find~eqT',
 'find~draw~oZ','find~chose~o1',
-'draw~yield~rc0','draw~end~rcN',
+'draw~end~isE','draw~yield~rc0',
 'chose~table~eqT', 
-'table~end~rcN','table~yield~rc0','table~find~rc1',
+'table~end~isE','table~yield~rc0','table~find~rc1',
 'yield~find~eqT',
 ];
 
@@ -34,24 +34,28 @@ function buildGraph(edges) {
   return graph;
 }
 
-
-export const stateGraph = buildGraph(transitions);
+const stateGraph = buildGraph(transitions);
 
 function eqT() { return true; }
 
 export function createMachine() {
   let machine = Object.create(null);
-  machine.init = function (stateGraph) {
+  machine.init = function (gstate) {
     this.state = 'start'
     this.graph = stateGraph;
     this.options = null;
+    this.emptyDeck =false;
+    this.emptyBank=false;
+    gstate.deck.register(machine.deckCb);
+    gstate.hand.bank.register(machine.bankCb);
     this.move = moveFactory(this.state, this.round);
   }
-  machine.execute = function () {
-    console.log('exec');
 
+  machine.execute = function (gstate) {
+    console.log('exec');
     this.rc=this.move.execute();
   }
+
   machine.next = function (gstate) {
     if(this.state=='end' ){
       this.stop();
@@ -68,6 +72,17 @@ export function createMachine() {
         return this.move = moveFactory(item.to, this.round, gstate,this.options);
       }
     }
+  }
+  machine.deckCb= function(){
+    machine.emptyDeck=true;
+    console.log("heureka");
+  }
+  machine.bankCb= function(){
+    machine.emptyBank=true;
+    console.log("hello");
+  }
+  machine.isE= function () {
+    return (this.emptyDeck || this.emptyBank);
   }
   machine.rc0= function () {
     return (this.rc ==0);
@@ -94,26 +109,29 @@ export function createMachine() {
     switch (name) {
       case 'eqT':
         return this.eqT();
-        case 'rc0':
-          return this.rc0();
-          case 'rc1':
-            return this.rc1();
-            case 'rcN':
-              return this.rcN();
-                  case 'eqF':
+      case 'rc0':
+        return this.rc0();
+      case 'rc1':
+        return this.rc1();
+      case 'rcN':
+        return this.rcN();
+      case 'eqF':
         return this.eqF();
-        case 'oZ':
-          return this.oZ();
-          case 'o1':
-            return this.o1();
-      
-        default:
-        console.log("not found!");
+      case 'oZ':
+        return this.oZ();
+      case 'o1':
+        return this.o1();
+      case 'isE':
+        return this.isE();
+
+
+      default:
+        console.log("predicate not found!");
     }
   }
-    machine.stop = function () {
-      console.log("shutdown");
-    
+  machine.stop = function () {
+    console.log("shutdown");
+
   }
 
 

@@ -1,7 +1,7 @@
 import { factory, Card } from "./deck.js";
 import { moveFactory} from "./movee.js";
 import { Find } from "./find.js";
-import { stateGraph, createMachine } from "./central.js";
+import { createMachine } from "./central.js";
 
 import { TestCase1, TestCase2, TestCase3} from "./test.js";
 
@@ -12,9 +12,11 @@ const MIN_SEQUENCE = 3;
 
 class Hand {
   constructor(d1) {
-    this.bank = new Array();
+//    this.bank = new Array();
+    this.bank = new createBank();
     for (let i = 0; i < INITIAL_BANK; i++) {
-      this.draw(d1);
+      //this.draw(d1);
+      this.bank.push(d1.shift());
     }
   }
 
@@ -22,6 +24,22 @@ class Hand {
     this.bank.push(d1.shift());
   }
 }
+
+function createBank() {
+  const b1 = new Array();
+
+  b1.take = function(index,count){
+    b1.splice(index,count);
+    if(b1.length==0)
+      b1.callback();
+  }
+
+b1.register = function(cb){
+    b1.callback = cb;
+  }
+  return b1;
+}
+
 
 //build a new deck
 
@@ -37,23 +55,12 @@ class GameState {
     this.winner = null;
   }
 
-/*  play() {
-    let nx;
-    nx = new NoOp(this);
-    this.moves.push(nx);
-    do {
-      nx = this.moves.shift();
-      this.dumpState();
-      nx = nx.execute();
-      if (nx) this.moves.push(nx);
-    } while (this.moves[0] != null);
-  }*/
   play(machine){
  let nx;
 
     do {
+      machine.execute(this);
       this.dumpState();
-      machine.execute();
       nx = machine.next(this);
     } while(nx != null);
   }
@@ -66,7 +73,7 @@ class GameState {
     t=this.dumpTable();
     d=this.deck.length;
     let c=b+t+d
-    console.log(b+"bank" +t +"table"+ d + "deck" + "cards="+c);
+    console.log(`bank:${b} table:${t} deck:${d} cards:${c}`);
   }
 
   dumpBank() {
@@ -98,10 +105,10 @@ class GameState {
   }
 }
 
-const g = new GameState(true);
+const g = new GameState();
 let machine= createMachine();
 
-machine.init(stateGraph);
+machine.init(g);
 g.play(machine);
 
 //console.log(new Card(1, "red").equals(new Card(1, "red")));
