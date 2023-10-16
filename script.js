@@ -3,7 +3,7 @@ import { moveFactory} from "./movee.js";
 import { Find } from "./find.js";
 import { createMachine } from "./central.js";
 
-import { TestCase1, TestCase2, TestCase3} from "./test.js";
+import { TestCase1, TestCase2, TestCase3} from "./testcase.js";
 
 const MAX_VALUE = 9;
 const INITIAL_BANK = 6;
