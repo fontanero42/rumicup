@@ -1,6 +1,6 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { findTuple, findPlus} from "./futils.js";
-import { Row, Plus} from "./option.js";
+import { findTuple, findPlus, findSplit} from "./futils.js";
+import { Row, Plus, Middle} from "./option.js";
 
 
 const bank= new Array();
@@ -102,5 +102,55 @@ result5.push(new Plus([
 
 test ('find no card empty table',()  => {
     expect(findPlus(bank5, table5)).toEqual(result5);
+});
+
+const bank6 =[new Card(1,'orange'),
+new Card(5,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table6 =new Array();
+table6.push([
+new Card(2,'red'),
+new Card(3,'red'),
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+new Card(9,'red'),
+]);
+const result6 = new Array();
+result6.push(new Middle ([
+    new Card(5,'red'),
+]));
+
+test ('find split card 5-red for sequence 2-9.red ',()  => {
+    expect(findSplit(bank6, table6)).toEqual(result6);
+});
+
+const bank7 =[new Card(1,'orange'),
+new Card(5,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table7 =new Array();
+table7.push([
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+]);
+const result7 = new Array();
+
+test ('find split card 5-red for sequence 2-9.red ',()  => {
+    expect(findSplit(bank7, table7)).toEqual(result7);
 });
 

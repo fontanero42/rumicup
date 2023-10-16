@@ -40,4 +40,11 @@ export class Option {
       this.type = "plus";
     }
   }
+
+  export class Middle extends Option {
+    constructor(cards) {
+      super(cards);
+      this.type = "middle";
+    }
+  }
   
