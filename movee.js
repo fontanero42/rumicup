@@ -1,8 +1,8 @@
 import { Move, Find, Yield } from "./find.js";
-import { Card } from "./deck.js";
+import { Card, MAX_VALUE } from "./deck.js";
 
 
-export function moveFactory(type, round, gstate, options) {
+export function moveFactory(type, round, gstate, options,cb) {
   let move;
   switch (type) {
     case 'start':
@@ -21,7 +21,7 @@ export function moveFactory(type, round, gstate, options) {
             move = new Chose(round, gstate, options);
             break;
             case 'table':
-              move = new Surface(round, gstate, options);
+              move = new Surface(round, gstate, options,false ,cb);
               break;
               case 'end':
                 move = new End (round, gstate,'finis');
@@ -81,7 +81,7 @@ export  class Chose extends Move {
   }
   
 export  class Surface extends Move {
-    constructor(round, gstate, option, last) {
+    constructor(round, gstate, option, last,cb) {
       super(round);
       super.message = "table";
       this.gstate = gstate;
@@ -92,10 +92,15 @@ export  class Surface extends Move {
       this.last = last;
       this.count = option.count;
       this.overflow = option.overflow;
+      this.callback =cb;
     }
-  
+   
+    register = function(cb){
+      this.callback = cb;
+    }
     execute() {
       super.log();
+      this.callback(this.type);
       let bsize;
       switch (this.type) {
         case "right":
@@ -132,20 +137,37 @@ export  class Surface extends Move {
       return i;
     }
   
-    joinCard() {
-      const color = this.cards[0].color;
-      for (const row of this.gstate.table) {
-        if (row[0].valor != row[1].valor) {
-          if (row[0].color == color) {
-            if (this.type == "right") row.push(this.cards[0]);
-            else row.unshift(this.cards[0]);
+  checkRow(type, row, card) {
+    if (type == 'right') {
+      if (row[row.length - 1].valor % MAX_VALUE == card.valor - 1) {
+        row.push(card);
+        return true;
+      }
+    } else {
+      if (card.valor % MAX_VALUE == row[0].valor - 1) {
+        row.unshift(card);
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  joinCard() {
+    const color = this.cards[0].color;
+    for (const row of this.gstate.table) {
+      if (row[0].valor != row[1].valor) {
+        if (row[0].color == color) {
+          // ToDo check forrr duplicatee rrrow
+          if (this.checkRow(this.type, row, this.cards[0])) {
             this.fromBank(this.cards[0]);
+            return this.gstate.hand.bank.length;
           }
         }
       }
-  
-      return this.gstate.hand.bank.length;
     }
+    return this.gstate.hand.bank.length;
+  }
   
     plusCard() {
       const valor = this.cards[0].valor;
