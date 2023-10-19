@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { Row, Plus, Middle} from "./option.js";
+import { RowT, RowS, Plus, Middle} from "./option.js";
 /**
 * find a tuple of cards on player's bank.
 * @generator
@@ -26,7 +26,7 @@ export function findTuple(bank) {
             )
           );
         }
-        options.push(new Row(collector));
+        options.push(new RowT(collector));
         collector.clear();
       }
     }

@@ -2,14 +2,14 @@ import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
 
 
-export function moveFactory(type, round, gstate, options,cb) {
+export function moveFactory(type, round, gstate, options,cb1,cb2) {
   let move;
   switch (type) {
     case 'start':
       move = new NoOp(gstate);
       break;
     case 'find':
-      move = new Find(round, gstate);
+      move = new Find(round, gstate, cb2);
       break;
       case 'draw':
         move = new Draw(round, gstate);
@@ -21,7 +21,7 @@ export function moveFactory(type, round, gstate, options,cb) {
             move = new Chose(round, gstate, options);
             break;
             case 'table':
-              move = new Surface(round, gstate, options,false ,cb);
+              move = new Surface(round, gstate, options,false ,cb1);
               break;
               case 'end':
                 move = new End (round, gstate,'finis');
@@ -95,9 +95,9 @@ export  class Surface extends Move {
       this.callback =cb;
     }
    
-    register = function(cb){
+  /*  register = function(cb){
       this.callback = cb;
-    }
+    }*/
     execute() {
       super.log();
       this.callback(this.type);
@@ -109,10 +109,13 @@ export  class Surface extends Move {
         case "left":
           bsize = this.joinCard();
           break;
-        case "row":
+        case "rowT":
           bsize = this.newRow();
           break;
-        case "plus":
+          case "rowS":
+            bsize = this.newRow();
+            break; 
+          case "plus":
           bsize = this.plusCard();
           break;
         default:

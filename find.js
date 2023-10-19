@@ -1,6 +1,6 @@
 import { Chose, Draw } from "./movee.js";
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { Option, Right, Row, Left, Plus } from "./option.js";
+import { Option, Right, RowT, RowS, Left, Plus } from "./option.js";
 
 export class Move {
   constructor(round) {
@@ -21,11 +21,12 @@ export class Move {
 }
 
 export class Find extends Move {
-  constructor(round, gstate) {
+  constructor(round, gstate,cb) {
     super(round);
     super.message = "find";
     this.gstate = gstate;
     this.options = new Array();
+    this.callback = cb;
   }
 
   execute() {
@@ -42,6 +43,7 @@ export class Find extends Move {
       .concat(p_options);
     //const options=t_options.concat(p_options);
     this.options = options;
+    this.callback(options);
     return options;
   }
 
@@ -83,7 +85,7 @@ export class Find extends Move {
           );
           cards.push(this.gstate.hand.bank[ix]);
         }
-        options.push(new Row(cards));
+        options.push(new RowS(cards));
         cards = [];
       }
       collector = [];
@@ -109,7 +111,7 @@ export class Find extends Move {
             )
           );
         }
-        options.push(new Row(collector));
+        options.push(new RowT(collector));
         collector.clear();
       }
     }
@@ -127,19 +129,21 @@ export class Find extends Move {
       for (const row of this.gstate.table) {
         if (row[0].valor != row[1].valor) {
           valor = row[row.length - 1].valor + 1;
-          if (valor > MAX_VALUE) valor = 1;
+          if (valor > MAX_VALUE) valor = valor % MAX_VALUE;
           if (valor == MAX_VALUE) overflow = true;
 
           color = row[row.length - 1].color;
         }
-        ix = this.gstate.hand.bank.findIndex(
-          (element) => element.color == color && element.valor == valor
-        );
-        if (ix >= 0) {
-          cards.push(this.gstate.hand.bank[ix]);
-          options.push(new Right(cards, overflow));
-        }
-        ix = -1;
+
+        if (!this.gstate.table.find((e) => e.valor == valor)) {
+          ix = this.gstate.hand.bank.findIndex(
+            (element) => element.color == color && element.valor == valor
+          );
+          if (ix >= 0) {
+            cards.push(this.gstate.hand.bank[ix]);
+            options.push(new Right(cards, overflow));
+          }
+        } ix = -1;
         cards = [];
       }
     }

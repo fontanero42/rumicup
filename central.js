@@ -46,6 +46,8 @@ export function createMachine() {
     this.options = null;
     this.emptyDeck =false;
     this.emptyBank=false;
+    this.log=new Map();
+    this.opt=new Map();  
     gstate.deck.register(machine.deckCb);
     gstate.hand.bank.register(machine.bankCb);
     this.move = moveFactory(this.state, this.round);
@@ -69,7 +71,7 @@ export function createMachine() {
     for (const item of newStates) {
       if (this.predicate(item.cond)) {
         this.state = item.to;
-        return this.move = moveFactory(item.to, this.round, gstate,this.options);
+        return this.move = moveFactory(item.to, this.round, gstate,this.options,machine.tableCb,machine.optionsCb);
       }
     }
   }
@@ -80,6 +82,20 @@ export function createMachine() {
   machine.bankCb= function(){
     machine.emptyBank=true;
     console.log("hello");
+  }
+  machine.tableCb = function (type) {
+    if (!machine.log.get(type))
+      machine.log.set(type, 1);
+    else
+      machine.log.set(type, machine.log.get(type)+1);
+  }
+  machine.optionsCb = function (options) {
+    for (const item of options) {
+      if (!machine.opt.get(item.type))
+        machine.opt.set(item.type, 1);
+      else
+        machine.opt.set(item.type, machine.log.get(item.type) + 1);
+    }
   }
   machine.isE= function () {
     return (this.emptyDeck || this.emptyBank);
@@ -131,7 +147,13 @@ export function createMachine() {
   }
   machine.stop = function () {
     console.log("shutdown");
+    this.dumpLog();
 
+  }
+  machine.dumpLog = function () {
+    console.log (`rounds ${this.round}`);
+    console.log(machine.log);
+    console.log(machine.opt);
   }
 
 

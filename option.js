@@ -27,10 +27,17 @@ export class Option {
     }
   }
   
-  export class Row extends Option {
+  export class RowT extends Option {
     constructor(cards) {
       super(cards);
-      this.type = "row";
+      this.type = "rowT";
+    }
+  }
+  
+  export class RowS extends Option {
+    constructor(cards) {
+      super(cards);
+      this.type = "rowS";
     }
   }
   
