@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { RowT, RowS, Plus, Middle} from "./option.js";
+import { RowT, RowS, Plus, Middle, Right, Left } from "./option.js";
 /**
 * find a tuple of cards on player's bank.
 * @generator
@@ -8,67 +8,103 @@ import { RowT, RowS, Plus, Middle} from "./option.js";
 * @yields {yieldDataType} Brief description of yielded items here.
 */
 export function findTuple(bank) {
-    const options = new Array();
-    const tuple = new Array(MAX_VALUE + 1);
-    let second;
-    let third;
-    const collector = new Set();
-    for (let n = 1; n < MAX_VALUE + 1; n++) {
-      second = bank.filter((element) => element.valor == n);
-      third = second.map((element) => element.color);
-      //distinct
-      tuple[n] = [...new Set(third)];
-      if (tuple[n].length >= TUPPLE_THRESHOLD) {
-        for (const t of tuple[n]) {
-          collector.add(
-            bank.find(
-              (element) => element.color == t && element.valor == n
-            )
-          );
-        }
-        options.push(new RowT(collector));
-        collector.clear();
+  const options = new Array();
+  const tuple = new Array(MAX_VALUE + 1);
+  let second;
+  let third;
+  const collector = new Set();
+  for (let n = 1; n < MAX_VALUE + 1; n++) {
+    second = bank.filter((element) => element.valor == n);
+    third = second.map((element) => element.color);
+    //distinct
+    tuple[n] = [...new Set(third)];
+    if (tuple[n].length >= TUPPLE_THRESHOLD) {
+      for (const t of tuple[n]) {
+        collector.add(
+          bank.find(
+            (element) => element.color == t && element.valor == n
+          )
+        );
       }
+      options.push(new RowT(collector));
+      collector.clear();
     }
-    return options;
   }
+  return options;
+}
 
 export function findPlus(bank, table) {
-    const options = new Array();
-    if (table.length > 0) {
-      let ix;
-      let valor;
-      let cards = new Array();
-      let difference = new Set();
-      for (const row of table) {
-        if (row[0].valor == row[1].valor) {
-          valor = row[0].valor;
-          const exists = new Set();
-          for (const card of row) {
-            exists.add(card.color);
-          }
-          difference = new Set(
-            [...Card.allColors].filter((x) => !exists.has(x))
-          );
+  const options = new Array();
+  if (table.length > 0) {
+    let ix;
+    let valor;
+    let cards = new Array();
+    let difference = new Set();
+    for (const row of table) {
+      if (row[0].valor == row[1].valor) {
+        valor = row[0].valor;
+        const exists = new Set();
+        for (const card of row) {
+          exists.add(card.color);
         }
-        //look for card on bank
-        for (const item of difference) {
+        difference = new Set(
+          [...Card.allColors].filter((x) => !exists.has(x))
+        );
+      }
+      //look for card on bank
+      for (const item of difference) {
+        ix = bank.findIndex(
+          (element) => element.color == item && element.valor == valor
+        );
+        if (ix >= 0) {
+          cards.push(bank[ix]);
+          options.push(new Plus(cards));
+        }
+      }
+      ix = -1;
+      cards = [];
+      difference.clear();
+    }
+  }
+
+  return options;
+}
+
+
+
+export function findRight(bank, table) {
+  const options = new Array();
+  if (table.length > 0) {
+    let ix;
+    let color;
+    let valor;
+    let overflow = false;
+    let cards = new Array();
+    for (const row of table) {
+      if (row.length < MAX_VALUE) {
+        if (row[0].valor != row[1].valor) {
+          valor = row[row.length - 1].valor + 1;
+          if (valor > MAX_VALUE) valor = valor % MAX_VALUE;
+          if (valor == MAX_VALUE) overflow = true;
+
+          color = row[row.length - 1].color;
+        }
+
+        if (!row.find((e) => e.valor == valor)) {
           ix = bank.findIndex(
-            (element) => element.color == item && element.valor == valor
+            (element) => element.color == color && element.valor == valor
           );
           if (ix >= 0) {
             cards.push(bank[ix]);
-            options.push(new Plus(cards));
+            options.push(new Right(cards, overflow));
           }
-        }
-        ix = -1;
+        } ix = -1;
         cards = [];
-        difference.clear();
       }
     }
-
-    return options;
   }
+  return options;
+}
 
 
 export function findSplit(bank, table) {
@@ -89,7 +125,7 @@ export function findSplit(bank, table) {
           max = Math.max(...first);
           min = Math.min(...first);
           for (const item of first) {
-            if (item - min >= MIN_SEQUENCE-1 && max - item >= MIN_SEQUENCE-1) {
+            if (item - min >= MIN_SEQUENCE - 1 && max - item >= MIN_SEQUENCE - 1) {
               //fin on the bencch
               ix = bank.findIndex(
                 (element) => element.color == color && element.valor == item
@@ -108,6 +144,39 @@ export function findSplit(bank, table) {
   }
   return options;
 }
+
+export function findLeft(bank, table) {
+  const options = new Array();
+  if (table.length > 0) {
+    let ix;
+    let color;
+    let valor;
+    let cards = new Array();
+    for (const row of table) {
+      if (row.length < MAX_VALUE) {
+        if (row[0].valor != row[1].valor) {
+          valor = row[0].valor - 1;
+          if (valor == 0) valor = MAX_VALUE;
+          color = row[0].color;
+        }
+        ix = bank.findIndex(
+          (element) => element.color == color && element.valor == valor
+        );
+        if (ix >= 0) {
+          cards.push(bank[ix]);
+          options.push(new Left(cards));
+        }
+        ix = -1;
+        cards = [];
+
+      }
+    }
+
+  }
+
+  return options;
+}
+/*
 const bank6 =[new Card(1,'orange'),
 new Card(5,'red'),
 new Card(1,'red'),
@@ -131,4 +200,4 @@ const result6 = new Array();
 result6.push(new Middle ([
     new Card(5,'red'),
 ]));
- findSplit(bank6  ,table6 );
+ findSplit(bank6  ,table6 );*/

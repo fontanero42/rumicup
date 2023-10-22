@@ -1,6 +1,6 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
-
+import { splitCard} from "./tutils.js";
 
 export function moveFactory(type, round, gstate, options,cb1,cb2) {
   let move;
@@ -98,40 +98,43 @@ export  class Surface extends Move {
   /*  register = function(cb){
       this.callback = cb;
     }*/
-    execute() {
-      super.log();
-      this.callback(this.type);
-      let bsize;
-      switch (this.type) {
-        case "right":
-          bsize = this.joinCard();
-          break;
-        case "left":
-          bsize = this.joinCard();
-          break;
-        case "rowT":
-          bsize = this.newRow();
-          break;
-          case "rowS":
-            bsize = this.newRow();
-            break; 
-          case "plus":
-          bsize = this.plusCard();
-          break;
-        default:
-          return -1;
-          //new End(this.round, this.gstate, " End option unkown");
-      }
-  /*    if (bsize < 1) return new End(this.round, this.gstate, "win empty bank");
-      if (this.overflow) return new Find(this.round, this.gstate);
-      if (this.last) return new Yield(this.round, this.gstate);
-      else return new Find(this.round, this.gstate);*/
-      if (bsize <1) return -1;
-      if (this.overflow) return 1;
-      if (this.last) return 0;
-      else return 1;
-
+  execute() {
+    super.log();
+    this.callback(this.type);
+    let bsize;
+    switch (this.type) {
+      case "right":
+        bsize = this.joinCard();
+        break;
+      case "left":
+        bsize = this.joinCard();
+        break;
+      case "rowT":
+        bsize = this.newRow();
+        break;
+      case "rowS":
+        bsize = this.newRow();
+        break;
+      case "plus":
+        bsize = this.plusCard();
+        break;
+      case "middle":
+        bsize = splitCard( this.gstate.hand.bank,this.gstate.table,this.cards);
+        break;
+      default:
+        return -1;
+      //new End(this.round, this.gstate, " End option unkown");
     }
+    /*    if (bsize < 1) return new End(this.round, this.gstate, "win empty bank");
+        if (this.overflow) return new Find(this.round, this.gstate);
+        if (this.last) return new Yield(this.round, this.gstate);
+        else return new Find(this.round, this.gstate);*/
+    if (bsize < 1) return -1;
+    if (this.overflow) return 1;
+    if (this.last) return 0;
+    else return 1;
+
+  }
     fromBank(card) {
       let i;
       i = this.gstate.hand.bank.indexOf(card);

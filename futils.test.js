@@ -1,6 +1,6 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { findTuple, findPlus, findSplit} from "./futils.js";
-import { RowT, RowS, Plus, Middle} from "./option.js";
+import { findTuple, findPlus, findSplit, findRight, findLeft} from "./futils.js";
+import { RowT, RowS, Plus, Middle, Right, Left} from "./option.js";
 
 
 const bank= new Array();
@@ -154,3 +154,133 @@ test ('Can not find split card 5-red for sequence 4-9.red ',()  => {
     expect(findSplit(bank7, table7)).toEqual(result7);
 });
 
+const bank8 =[new Card(1,'orange'),
+new Card(5,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table8 =new Array();
+table8.push([
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+]);
+const result8 = new Array();
+result8.push(new Right ([
+    new Card(9,'red')
+],true));
+
+test ('find right card 9-red for sequence 4-8.red ',()  => {
+    expect(findRight(bank8, table8)).toEqual(result8);
+});
+
+const bank9 =[new Card(1,'orange'),
+new Card(5,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+];
+const table9 =new Array();
+table9.push([
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+new Card(9,'red'),
+]);
+const result9 = new Array();
+result9.push(new Right ([
+    new Card(1,'red')
+],false));
+
+test ('find right card 1-red for sequence 4-9.red ',()  => {
+    expect(findRight(bank9, table9)).toEqual(result9);
+});
+
+const bank10 =[new Card(1,'orange'),
+new Card(3,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table10 =new Array();
+table10.push([
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+]);
+const result10 = new Array();
+result10.push(new Left   ([
+    new Card(3,'red')
+],true));
+
+test ('find left card 3-red for sequence 4-8.red ',()  => {
+    expect(findLeft(bank10, table10)).toEqual(result10);
+});
+
+const bank11 =[new Card(1,'orange'),
+new Card(3,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table11 =new Array();
+table11.push([
+new Card(1,'red'),
+new Card(2,'red'),
+new Card(3,'red'),
+new Card(4,'red'),
+new Card(5,'red'),
+]);
+const result11 = new Array();
+result11.push(new Left   ([
+    new Card(9,'red')
+],true));
+
+test ('find left card 9-red for sequence 1-5.red ',()  => {
+    expect(findLeft(bank11, table11)).toEqual(result11);
+});
+
+const bank12 =[new Card(1,'orange'),
+new Card(3,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red')
+];
+const table12 =new Array();
+table12.push([
+new Card(1,'red'),
+new Card(2,'red'),
+new Card(3,'red'),
+new Card(4,'red'),
+new Card(5,'red'),
+new Card(6,'red'),
+new Card(7,'red'),
+new Card(8,'red'),
+new Card(9,'red'),
+]);
+const result12 = new Array();
+
+
+test ('no left card for sequence 1-9.red ',()  => {
+    expect(findLeft(bank12, table12)).toEqual(result12);
+});
+
+test ('no right card for sequence 1-9.red ',()  => {
+    expect(findRight(bank12, table12)).toEqual(result12);
+});

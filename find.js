@@ -1,6 +1,7 @@
 import { Chose, Draw } from "./movee.js";
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 import { Option, Right, RowT, RowS, Left, Plus } from "./option.js";
+import { findTuple, findPlus, findSplit, findRight, findLeft} from "./futils.js";
 
 export class Move {
   constructor(round) {
@@ -32,16 +33,18 @@ export class Find extends Move {
   execute() {
     super.log();
     const s_options = this.findSequence();
-    const t_options = this.findTuple();
-    const c_options = this.findRight();
-    const l_options = this.findLeft();
-    const p_options = this.findPlus();
+    const t_options = findTuple(this.gstate.hand.bank);
+    const c_options = findRight(this.gstate.hand.bank,this.gstate.table);
+    const l_options = findLeft(this.gstate.hand.bank,this.gstate.table);
+    const p_options = findPlus(this.gstate.hand.bank,this.gstate.table);
+    const i_options = findSplit(this.gstate.hand.bank,this.gstate.table);
     const options = s_options
       .concat(t_options)
       .concat(c_options)
       .concat(l_options)
-      .concat(p_options);
-    //const options=t_options.concat(p_options);
+      .concat(p_options)
+      .concat(i_options);
+      //const options=t_options.concat(p_options);
     this.options = options;
     this.callback(options);
     return options;
