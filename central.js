@@ -5,7 +5,7 @@ const transitions=[
 'find~draw~oZ','find~chose~o1',
 'draw~end~isE','draw~yield~rc0',
 'chose~table~eqT', 
-'table~end~isE','table~yield~rc0','table~find~rc1',
+'table~end~cM','table~end~isE','table~yield~rc0','table~find~rc1',
 'yield~find~eqT',
 ];
 
@@ -46,10 +46,12 @@ export function createMachine() {
     this.options = null;
     this.emptyDeck =false;
     this.emptyBank=false;
+    this.cardMismatch=false;
     this.log=new Map();
     this.opt=new Map();  
     gstate.deck.register(machine.deckCb);
     gstate.hand.bank.register(machine.bankCb);
+    gstate.register(machine.tallyCb );
     this.move = moveFactory(this.state, this.round);
   }
 
@@ -83,6 +85,10 @@ export function createMachine() {
     machine.emptyBank=true;
     console.log("hello");
   }
+  machine.tallyCb= function(){
+    machine.cardMismatch=true;
+    console.log("card missing");
+  }
   machine.tableCb = function (type) {
     if (!machine.log.get(type))
       machine.log.set(type, 1);
@@ -99,6 +105,9 @@ export function createMachine() {
   }
   machine.isE= function () {
     return (this.emptyDeck || this.emptyBank);
+  }
+  machine.cM= function () {
+    return (this.cardMismatch);
   }
   machine.rc0= function () {
     return (this.rc ==0);
@@ -139,8 +148,8 @@ export function createMachine() {
         return this.o1();
       case 'isE':
         return this.isE();
-
-
+      case 'cM':
+        return this.cM();
       default:
         console.log("predicate not found!");
     }
@@ -153,6 +162,7 @@ export function createMachine() {
   machine.dumpLog = function () {
     console.log (`rounds ${this.round}`);
     console.log(machine.log);
+console.log("options");
     console.log(machine.opt);
   }
 
