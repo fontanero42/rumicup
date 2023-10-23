@@ -49,6 +49,7 @@ class GameState {
       this.deck = TestCase2;
     else 
       this.deck = factory();
+    this.initialDeckSize = this.deck.length;
     this.hand = new Hand(this.deck);
     this.moves = new Array();
     this.table = new Array();
@@ -65,6 +66,10 @@ class GameState {
     } while(nx != null);
   }
 
+  register (cb){
+    this.callback = cb;
+  }
+
   dumpState() {
     let b=0;
     let t=0;
@@ -73,7 +78,10 @@ class GameState {
     t=this.dumpTable();
     d=this.deck.length;
     let c=b+t+d
+    
     console.log(`bank:${b} table:${t} deck:${d} cards:${c}`);
+    if(c!=this.initialDeckSize)
+      this.callback();
   }
 
   dumpBank() {

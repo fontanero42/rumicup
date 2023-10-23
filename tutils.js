@@ -35,6 +35,7 @@ function      fromBank(card, bank) {
       bank.splice(i, 1);
       return i;
     }
+/*
     const bank =[new Card(1,'orange'),
     new Card(5,'red'),
     new Card(1,'red'),
@@ -58,5 +59,40 @@ function      fromBank(card, bank) {
     cards.push(
     new Card(5,'red'),
     );
+*/
+/*
+const bank22 =[new Card(4,'orange'),
+new Card(4,'red'),
+new Card(2,'blue'),
+new Card(2,'black'),
+];
+const table22 =new Array();
+table22.push([
+    new Card(1,'black'),
+    new Card(2,'black'),
+    new Card(3,'black'),
+    new Card(4,'black'),
+    ]);
 
-const result= splitCard(bank, table, cards ) ;
+    table22.push([
+        new Card(4,'black'),
+        new Card(5,'black'),
+        new Card(6,'black'),
+        new Card(7,'black'),
+        ]);
+    
+table22.push([
+new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+]);
+const cards22 =new Array();
+cards22.push(
+new Card(4,'orange'),
+);
+const result= splitCard(bank22, table22, cards22 ) ;
+*/

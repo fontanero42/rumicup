@@ -284,3 +284,50 @@ test ('no left card for sequence 1-9.red ',()  => {
 test ('no right card for sequence 1-9.red ',()  => {
     expect(findRight(bank12, table12)).toEqual(result12);
 });
+
+const bank22 =[new Card(4,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(4,'red'),
+new Card(2,'blue'),
+new Card(2,'black'),
+];
+const table22 =new Array();
+table22.push([
+    new Card(1,'black'),
+    new Card(2,'black'),
+    new Card(3,'black'),
+    new Card(4,'black'),
+    ]);
+
+    table22.push([
+        new Card(4,'black'),
+        new Card(5,'black'),
+        new Card(6,'black'),
+        new Card(7,'black'),
+        ]);
+    
+table22.push([
+new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+]);
+const result22 = new Array();
+result22.push(new Middle ([
+    new Card(9,'orange'),
+]));
+result22.push(new Middle ([
+    new Card(1,'orange'),
+]));
+result22.push(new Middle ([
+    new Card(2,'orange'),
+]));
+
+test ('Can not find split card error ',()  => {
+    expect(findSplit(bank22, table22)).toEqual(result22);
+});

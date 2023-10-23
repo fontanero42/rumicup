@@ -83,7 +83,7 @@ export  class Chose extends Move {
 export  class Surface extends Move {
     constructor(round, gstate, option, last,cb) {
       super(round);
-      super.message = "table";
+      super.message = "table "+option.type ;
       this.gstate = gstate;
       for (let item of option.cards) {
         this.cards.push(item);

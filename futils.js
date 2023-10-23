@@ -112,8 +112,6 @@ export function findSplit(bank, table) {
   if (table.length > 0) {
     let ix;
     let color;
-    let min;
-    let max;
     let first;
     let overflow;
     let cards = new Array();
@@ -122,24 +120,22 @@ export function findSplit(bank, table) {
         color = row[row.length - 1].color;
         if (row.length >= MIN_SEQUENCE * 2 - 1) {
           first = row.map(x => x.valor);
-          max = Math.max(...first);
-          min = Math.min(...first);
-          for (const item of first) {
-            if (item - min >= MIN_SEQUENCE - 1 && max - item >= MIN_SEQUENCE - 1) {
-              //fin on the bencch
-              ix = bank.findIndex(
-                (element) => element.color == color && element.valor == item
-              );
-              if (ix >= 0) {
-                cards.push(bank[ix]);
-                options.push(new Middle(cards, overflow));
-              }
+          for (let pos = MIN_SEQUENCE - 1; pos < row.length - (MIN_SEQUENCE-1); pos++) {
+            //find on the bench
+            ix = bank.findIndex(
+              (element) => element.color == color && element.valor == first[pos]
+            );
+            if (ix >= 0) {
+              cards.push(bank[ix]);
             }
+            if(cards.length >0)
+            options.push(new Middle(cards, overflow));
+            cards = [];
+            ix = -1;
+      
           }
         }
       }
-      ix = -1;
-      cards = [];
     }
   }
   return options;
@@ -201,3 +197,35 @@ result6.push(new Middle ([
     new Card(5,'red'),
 ]));
  findSplit(bank6  ,table6 );*/
+/*const bank22 = [new Card(4, 'orange'),
+new Card(4, 'red'),
+new Card(2, 'blue'),
+new Card(2, 'black'),
+];
+const table22 = new Array();
+table22.push([
+  new Card(1, 'black'),
+  new Card(2, 'black'),
+  new Card(3, 'black'),
+  new Card(4, 'black'),
+]);
+
+table22.push([
+  new Card(4, 'black'),
+  new Card(5, 'black'),
+  new Card(6, 'black'),
+  new Card(7, 'black'),
+]);
+
+table22.push([
+  new Card(7, 'orange'),
+  new Card(8, 'orange'),
+  new Card(9, 'orange'),
+  new Card(1, 'orange'),
+  new Card(2, 'orange'),
+  new Card(3, 'orange'),
+  new Card(4, 'orange'),
+]);
+const result22 = new Array();
+
+const result = findSplit(bank22, table22);*/
