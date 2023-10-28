@@ -1,6 +1,7 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
 import { splitCard } from "./tutils.js";
+import { rulez} from "./Rulez.js";
 
 export function moveFactory(type, round, gstate, options, cb1, cb2) {
   let move;
@@ -88,6 +89,7 @@ export class Surface extends Move {
     this.count = option.count;
     this.overflow = option.overflow;
     this.callback = cb;
+    this.callbackRulez = rulez;
   }
 
  
@@ -117,7 +119,7 @@ export class Surface extends Move {
       default:
         return -1;
      }
- 
+    this.callbackRulez(this.gstate.table);
     if (bsize < 1) return -1;
     if (this.overflow) return 1;
     if (this.last) return 0;
