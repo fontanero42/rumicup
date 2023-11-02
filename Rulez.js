@@ -20,12 +20,15 @@ export const ruleMaxS = createRule('MaximumSequence');
 
 export const ruleColD = createRule('ColorDuplicate');
 
+export const ruleValD = createRule('ValorDuplicate');
+
 export const rulez = function (table) {
   for (const row of table) {
     ruleMinS.check(row);
     ruleMaxS.check(row);
     ruleMinT.check(row);
     ruleColD.check(row);
+    ruleValD.check(row);
   }
 }
 
@@ -65,4 +68,14 @@ ruleColD.check = function (row) {
   }
   ruleColD.action();
   return ruleColD.isValid;
+}
+
+ruleValD.check = function (row) {
+  if (row[0].color == row[1].color) {
+    let valors = [...new Set(row.map((e) => e.valor))]
+    if (valors.length != row.length)
+      ruleValD.isValid = false;
+  }
+  ruleValD.action();
+  return ruleValD.isValid;
 }

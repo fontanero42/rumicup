@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { ruleColD, ruleMaxS, ruleMinT } from "./Rulez.js";
+import { ruleValD, ruleColD, ruleMaxS, ruleMinT } from "./Rulez.js";
 
 const row30 =[
     new Card(7,'orange'),
@@ -74,7 +74,30 @@ test ('Rulez Row lemgth < min tupple',()  => {
 });
 const row35 = [
 new Card(7,'orange'),
-]
+new Card(7,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(7,'orange'),
+];
+const result35 = false;
+
+test ('Rulez Valor Duplicate triple 7-orange',()  => {
+    expect(ruleValD.check(row35)).toEqual(result35 );
+});
+
+
+const row36 =[
+    new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(7,'orange'),
+];
+const result36 = false;
+
+test ('Rulez Valor Duplicate 7-orange',()  => {
+    expect(ruleValD.check(row36)).toEqual(result36);
+});
 /**
 test ('Rulez Row lemgth < min tupple',()  => {
     expect(ruleMinT.check(row35 )).toEqual(result34);
