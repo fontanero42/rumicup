@@ -9,57 +9,67 @@ export function splitCard(bank, table, cards ) {
     for (const row of table) {
       if (row[0].valor != row[1].valor) {
         if (row[0].color == color) {
-          // ToDo check forrr duplicatee rrrow
+          // ToDo check for duplicate row
+            if(hasDuplicate(table,cards[0]))  
+              console.log("!!!Duplicates!!");
             ix = row.findIndex((el)=>el.color==color && el.valor==valor);
             if(ix >0){
                second   = row.toSpliced(0,ix+1);
                second.unshift(cards[0]);
+               debugger;
                table.push(second);
                row.splice(ix+1   ,row.length-ix-1 );
+               fromBank(cards[0],bank);
+               return table ;
             }
-          fromBank(cards[0],bank);
-            return table ;
         }
       }
     }
     return table;
   }
 
-
+export function hasDuplicate(table, card) {
+  let i = 0;
+  for (const row of table) {
+    if (row.find((e) => e.valor == card.valor && e.color == card.color)) i++;
+  }
+  if (i > 1) return true;
+  else
+    return false;
+}
     
 
 function      fromBank(card, bank) {
       let i;
-      i = bank.indexOf(card);
+      i = bank.findIndex(
+        (element) => element.color == card.color && element.valor == card.valor
+      );
+ //     i = bank.indexOf(card);
       //bank.take(i, 1);
       bank.splice(i, 1);
       return i;
     }
-/*
-    const bank =[new Card(1,'orange'),
-    new Card(5,'red'),
-    new Card(1,'red'),
-    new Card(4,'blue'),
-    new Card(9,'black'),
-    new Card(9,'blue'),
+/**const bank =[new Card(1,'orange'),
+    new Card(6,'red'),
+    new Card(2,'red'),
+    new Card(7,'red'),
+    new Card(2,'black'),
     new Card(9,'red')
     ];
     const table =new Array();
     table.push([
-    new Card(2,'red'),
-    new Card(3,'red'),
-    new Card(4,'red'),
-    new Card(5,'red'),
-    new Card(6,'red'),
-    new Card(7,'red'),
-    new Card(8,'red'),
-    new Card(9,'red'),
+    new Card(9,'black'),
+    new Card(1,'black'),
+    new Card(2,'black'),
+    new Card(3,'black'),
+    new Card(4,'black'),
     ]);
     const cards=new Array();
     cards.push(
-    new Card(5,'red'),
+    new Card(2,'black'),
     );
-*/
+    const result= splitCard(bank, table, cards ) ;
+
 /*
 const bank22 =[new Card(4,'orange'),
 new Card(4,'red'),

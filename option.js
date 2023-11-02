@@ -21,8 +21,9 @@ export class Option {
   }
   
   export class Left extends Option {
-    constructor(cards) {
+    constructor(cards, overflow=false) {
       super(cards);
+      super.overflow=overflow
       this.type = "left";
     }
   }
@@ -38,6 +39,14 @@ export class Option {
     constructor(cards) {
       super(cards);
       this.type = "rowS";
+    }
+  }
+
+  export class RowO extends Option {
+    constructor(cards) {
+      super(cards);
+      super.overflow=true;
+      this.type = "rowO";
     }
   }
   

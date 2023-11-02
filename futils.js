@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { RowT, RowS, Plus, Middle, Right, Left } from "./option.js";
+import { RowT, RowS, RowO, Plus, Middle, Right, Left } from "./option.js";
 /**
 * find a tuple of cards on player's bank.
 * @generator
@@ -147,12 +147,16 @@ export function findLeft(bank, table) {
     let ix;
     let color;
     let valor;
+    let overflow  = false;
     let cards = new Array();
     for (const row of table) {
       if (row.length < MAX_VALUE) {
         if (row[0].valor != row[1].valor) {
           valor = row[0].valor - 1;
-          if (valor == 0) valor = MAX_VALUE;
+          if (valor == 0) {
+            valor = MAX_VALUE;
+            overflow =true;
+          }
           color = row[0].color;
         }
         ix = bank.findIndex(
@@ -160,7 +164,7 @@ export function findLeft(bank, table) {
         );
         if (ix >= 0) {
           cards.push(bank[ix]);
-          options.push(new Left(cards));
+          options.push(new Left(cards, overflow));
         }
         ix = -1;
         cards = [];
@@ -170,5 +174,86 @@ export function findLeft(bank, table) {
 
   }
 
+  return options;
+}
+
+
+export function findSequence(bank) {
+  const options = new Array();
+  let collector = new Array();
+  //sort by color and add sequentially
+  for (const color of Card.allColors) {
+    for (let i = 0; i < MAX_VALUE + 1; i++) {
+      for (const card of bank) {
+        if (color == card.color) {
+          if (i == card.valor) {
+            collector.push(i);
+          }
+        }
+      }
+    }
+    //check for gaps
+    
+    const result = collector.reduce(
+        (seq, v, i, a) => {
+          if (i && a[i - 1] !== v - 1) {
+            seq.push([]);
+          }
+          seq[seq.length - 1].push(v);
+          return seq;
+        },
+        [[]]
+      )
+      .filter(({ length }) => length > MIN_SEQUENCE - 1);
+    //console.log(result);
+    //assemble options
+    let ix;
+    let cards = new Array();
+    for (const outer of result) {
+      for (const inner of outer) {
+        ix = bank.findIndex(
+          (element) => element.color == color && element.valor == inner
+        );
+        cards.push(bank[ix]);
+      }
+      options.push(new RowS(cards));
+      cards = [];
+    }
+    collector = [];
+  }
+  return options;
+}
+
+export function findOverflow(bank) {
+  const options = new Array();
+  let collector = new Array();
+  let cards = new Array();
+  let ix = null;
+  //sort by color and add sequentially
+  for (const color of Card.allColors) {
+    let first = bank.filter(item => item.color == color);
+    let second = first.map(item => item.valor);
+    if (second.includes(MAX_VALUE) && second.includes(1)) {
+      collector.push(MAX_VALUE);
+      collector.push(1);
+      for (let n = 2; n < MIN_SEQUENCE; n++) {
+        if (second.includes(n))
+          collector.push(n);
+        else
+          break;
+      }
+    }
+    if (collector.length >= MIN_SEQUENCE) {
+      for (const item of     collector) {
+        ix = bank.findIndex(
+          (element) => element.color == color && element.valor == item);
+        cards.push(bank[ix]);
+      }
+      console.log(cards);
+      options.push(new RowO(cards));
+      collector=[];
+      cards = [];
+    }
+  }
   return options;
 }

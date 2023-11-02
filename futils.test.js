@@ -1,6 +1,6 @@
-import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { findTuple, findPlus, findSplit, findRight, findLeft} from "./futils.js";
-import { RowT, RowS, Plus, Middle, Right, Left} from "./option.js";
+import { Card} from "./deck.js";
+import { findTuple, findPlus, findSplit, findRight, findLeft, findSequence, findOverflow} from "./futils.js";
+import { RowT, RowS, RowO, Plus, Middle, Right, Left} from "./option.js";
 
 
 const bank= new Array();
@@ -223,7 +223,7 @@ new Card(8,'red'),
 const result10 = new Array();
 result10.push(new Left   ([
     new Card(3,'red')
-],true));
+]));
 
 test ('find left card 3-red for sequence 4-8.red ',()  => {
     expect(findLeft(bank10, table10)).toEqual(result10);
@@ -331,3 +331,59 @@ result22.push(new Middle ([
 test ('Can not find split card error ',()  => {
     expect(findSplit(bank22, table22)).toEqual(result22);
 });
+
+const bank13 =[new Card(1,'orange'),
+new Card(3,'red'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red'),
+new Card(2,'red'),
+];
+const result13 = new Array();
+result13.push(new RowS([
+new Card(1,'red'),
+new Card(2,'red'),
+new Card(3,'red'),
+]));
+
+test ('find sequence 1-3.red ',()  => {
+    expect(findSequence (bank13)).toEqual(result13);
+});
+
+const bank14 =[new Card(1,'orange'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red'),
+new Card(2,'red'),
+];
+const result14 = new Array();
+
+test ('no sequence',()  => {
+    expect(findSequence (bank14)).toEqual(result14);
+});
+
+const bank15 =[new Card(1,'orange'),
+new Card(1,'red'),
+new Card(4,'blue'),
+new Card(9,'black'),
+new Card(9,'blue'),
+new Card(9,'red'),
+new Card(2,'red'),
+];
+const result15 = new Array();
+result15.push(new RowO([
+    new Card(9,'red'),
+    new Card(1,'red'),
+    new Card(2,'red'),
+    ]));
+    
+    
+test ('ovrflow sequence 9-2.red',()  => {
+    expect(findOverflow(bank15)).toEqual(result15);
+});
+
+                                                                            

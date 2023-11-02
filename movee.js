@@ -95,6 +95,7 @@ export class Surface extends Move {
  
   execute() {
     super.log();
+    this.dumpCard();
     this.callback(this.type);
     let bsize;
     switch (this.type) {
@@ -108,6 +109,9 @@ export class Surface extends Move {
         bsize = this.newRow();
         break;
       case "rowS":
+        bsize = this.newRow();
+        break;
+      case "rowO":
         bsize = this.newRow();
         break;
       case "plus":
@@ -126,6 +130,18 @@ export class Surface extends Move {
     else return 1;
 
   }
+
+  dumpCard() {
+    let line = new String();
+    console.log("Card" + ".......................");
+    for (const element of this.cards) {
+      line = line.concat(element.toString());
+    }
+    console.log(line);
+    console.log("................................");
+  }
+
+
   fromBank(card) {
     let i;
     i = this.gstate.hand.bank.indexOf(card);
