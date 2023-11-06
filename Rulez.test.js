@@ -1,5 +1,6 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 import { ruleValD, ruleColD, ruleMaxS, ruleMinT } from "./Rulez.js";
+import {jest} from '@jest/globals'
 
 const row30 =[
     new Card(7,'orange'),
@@ -11,9 +12,12 @@ new Card(3,'orange'),
 new Card(4,'orange'),
 ];
 const result30 = true;
+ruleMaxS.action=jest.fn();
 
 test ('Rulez Row length max sequence',()  => {
+
     expect(ruleMaxS.check(row30)).toEqual(result30);
+    expect(ruleMaxS.action).toHaveBeenCalled();
 });
 
 const row31 =[
@@ -41,10 +45,14 @@ new Card(7,'blue'),
 new Card(7,'black'),
 ];
 const result32 = true;
+ruleColD.action=jest.fn(n=>true);
 
 test ('Rulez Row color no duplicates',()  => {
     expect(ruleColD.check(row32 )).toEqual(result32);
 });
+
+ruleMinT.action=jest.fn(n=>true);
+
 test ('Rulez Row lemgth > min tupple',()  => {
     expect(ruleMinT.check(row32 )).toEqual(result32);
 });
@@ -80,6 +88,7 @@ new Card(1,'orange'),
 new Card(7,'orange'),
 ];
 const result35 = false;
+ruleValD.action=jest.fn(n=>true);
 
 test ('Rulez Valor Duplicate triple 7-orange',()  => {
     expect(ruleValD.check(row35)).toEqual(result35 );

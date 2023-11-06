@@ -1,13 +1,19 @@
 import { MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 
-function createRule(name) {
+export function createRule(name) {
   let rule = Object.create(null);
   rule.name = name;
   rule.isValid = true;
+//  rule.callback = machine;
+  rule.register = function (cb){
+    rule.callback = cb;
+  }
+
   rule.action = function () {
-    if (!this.isValid)
-      //this.callback(this.name);
+    if (!this.isValid){
+      this.callback(this.name);
       console.log(this.name + "trigger");
+    }
   }
   return rule;
 }
@@ -30,6 +36,13 @@ export const rulez = function (table) {
     ruleColD.check(row);
     ruleValD.check(row);
   }
+}
+export const rulezInit=function(cb) {
+  ruleMinS.register(cb);
+  ruleMaxS.register(cb);
+  ruleMinT.register(cb);
+  ruleColD.register(cb);
+  ruleValD.register(cb);
 }
 
 ruleMinS.check = function (row) {

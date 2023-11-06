@@ -1,6 +1,6 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
-import { splitCard } from "./tutils.js";
+import { splitCard , plusCard} from "./tutils.js";
 import { rulez} from "./Rulez.js";
 
 export function moveFactory(type, round, gstate, options, cb1, cb2) {
@@ -115,7 +115,7 @@ export class Surface extends Move {
         bsize = this.newRow();
         break;
       case "plus":
-        bsize = this.plusCard();
+        bsize = plusCard(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
       case "middle":
         bsize = splitCard(this.gstate.hand.bank, this.gstate.table, this.cards);
@@ -172,9 +172,11 @@ export class Surface extends Move {
       if (row[0].valor != row[1].valor) {
         if (row[0].color == color) {
           // ToDo check forrr duplicatee rrrow
-          if (this.checkRow(this.type, row, this.cards[0])) {
-            this.fromBank(this.cards[0]);
-            return this.gstate.hand.bank.length;
+          if (row.length < MAX_VALUE) {
+            if (this.checkRow(this.type, row, this.cards[0])) {
+              this.fromBank(this.cards[0]);
+              return this.gstate.hand.bank.length;
+            }
           }
         }
       }

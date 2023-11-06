@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { splitCard} from "./tutils.js";
+import { plusCard, splitCard} from "./tutils.js";
 
 const bank6 =[new Card(1,'orange'),
 new Card(5,'red'),
@@ -109,4 +109,112 @@ result22.push([
     ]);
 test ('split card ',()  => {
     expect(splitCard(bank22, table22, cards22)).toEqual(result22);
+});
+
+const bank23 =[new Card(7,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(4,'red'),
+new Card(2,'blue'),
+new Card(7,'orange'),
+new Card(2,'black'),
+];
+const table23 =new Array();
+table23.push([
+    new Card(1,'black'),
+    new Card(2,'black'),
+    new Card(3,'black'),
+    new Card(4,'black'),
+    ]);
+
+table23.push([
+new Card(7,'red'),
+new Card(7,'blue'),
+new Card(7,'black'),
+]);
+    
+table23.push([
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+]);
+const cards23 =new Array();
+cards23.push(
+new Card(7,'orange'),
+);
+const result23 = new Array();
+result23.push([
+new Card(1,'black'),
+new Card(2,'black'),
+new Card(3,'black'),
+new Card(4,'black'),
+]);
+result23.push([
+new Card(7,'red'),
+new Card(7,'blue'),
+new Card(7,'black'),
+new Card(7,'orange'),
+]);
+result23.push([
+    new Card(8,'orange'),
+    new Card(9,'orange'),
+    new Card(1,'orange'),
+    new Card(2,'orange'),
+    new Card(3,'orange'),
+    new Card(4,'orange'),
+    ]);
+    test ('plus card 7-orange',()  => {
+        expect(plusCard(bank23, table23, cards23)).toEqual(result23);
+    });
+    
+    const bank24 =[
+        new Card(3,'red'),
+        new Card(1,'blue'),
+        new Card(8,'blue'),
+        new Card(5,'orange'),
+        new Card(7,'red'),
+        new Card(7,'orange'),
+        new Card(9,'blue'),
+        new Card(8,'blue'),
+        new Card(2,'black'),
+        new Card(8,'orange'),
+        new Card(4,'black'),
+  ];
+            
+
+  const table24 =[];
+  table24.push([
+    new Card(4,'blue'),
+    new Card(4,'red'),
+    new Card(4,'black'),
+    ]);
+    table24.push([
+        new Card(4,'blue'),
+        new Card(4,'red'),
+        new Card(4,'orange'),
+        ]);
+        const cards24 =new Array();
+        cards24.push(
+        new Card(4,'black'),
+        );
+            
+const result24 = new Array();
+result24.push([
+    new Card(4,'blue'),
+    new Card(4,'red'),
+    new Card(4,'black'),
+    ]);
+    result24.push([
+        new Card(4,'blue'),
+        new Card(4,'red'),
+        new Card(4,'orange'),
+        new Card(4,'black'),
+    ]);
+
+test ('plus card 7-orange',()  => {
+    expect(plusCard(bank24, table24, cards24)).toEqual(result24);
 });

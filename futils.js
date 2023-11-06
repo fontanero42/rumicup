@@ -249,11 +249,32 @@ export function findOverflow(bank) {
           (element) => element.color == color && element.valor == item);
         cards.push(bank[ix]);
       }
-      console.log(cards);
       options.push(new RowO(cards));
-      collector=[];
       cards = [];
     }
+    collector=[];
   }
   return options;
 }
+const bank16 =[
+  new Card(1,'red'),
+  new Card(8,'black'),
+  new Card(2,'black'),
+  new Card(4,'orange'),
+  new Card(6,'orange'),
+  new Card(8,'black'),
+  new Card(9,'red'),
+  new Card(7,'black'),
+  new Card(8,'orange'),
+  new Card(2,'orange'),
+  new Card(4,'blue'),
+  new Card(5,'black'),
+  new Card(1,'orange'),
+  new Card(9,'black'),
+  new Card(6,'orange'),
+  new Card(6,'red'),
+  new Card(7,'blue'),
+  new Card(1,'black'),
+  ];
+  
+//findOverflow  (bank16)

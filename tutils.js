@@ -1,6 +1,25 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 
 
+export function plusCard(bank, table, cards) {
+  const valor = cards[0].valor;
+  for (const row of table) {
+    if (row[0].valor == row[1].valor) {
+      if (row[0].valor == valor) {
+        if (row.length < Card.allColors.length) {
+          if (! row.map(it => it.color).includes(cards[0].color)) {
+            row.push(cards[0]);
+            fromBank(cards[0], bank);
+            return table;
+          }
+        }
+      }
+    }
+  }
+  //return this.gstate.hand.bank.length;
+  return table;
+}
+
 export function splitCard(bank, table, cards ) {
     const color = cards[0].color;
     const valor = cards[0].valor;
@@ -16,7 +35,6 @@ export function splitCard(bank, table, cards ) {
             if(ix >0){
                second   = row.toSpliced(0,ix+1);
                second.unshift(cards[0]);
-               debugger;
                table.push(second);
                row.splice(ix+1   ,row.length-ix-1 );
                fromBank(cards[0],bank);

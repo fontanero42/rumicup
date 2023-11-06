@@ -1,11 +1,13 @@
+import { rulezInit } from "./Rulez.js";
 import { moveFactory } from "./movee.js";
+const VERBOSE =false;
 
 const transitions=[
 'start~find~eqT',
 'find~draw~oZ','find~chose~o1',
 'draw~end~isE','draw~yield~rc0',
 'chose~table~eqT', 
-'table~end~cM','table~end~isE','table~yield~rc0','table~find~rc1',
+'table~end~rV','table~end~cM','table~end~isE','table~yield~rc0','table~find~rc1',
 'yield~find~eqT',
 ];
 
@@ -47,11 +49,14 @@ export function createMachine() {
     this.emptyDeck =false;
     this.emptyBank=false;
     this.cardMismatch=false;
+    this.rulezViolation=false;
+    this.ruleName='';
     this.log=new Map();
     this.opt=new Map();  
     gstate.deck.register(machine.deckCb);
     gstate.hand.bank.register(machine.bankCb);
     gstate.register(machine.tallyCb );
+    rulezInit(machine.rulezVl );
     this.move = moveFactory(this.state, this.round);
   }
 
@@ -89,6 +94,11 @@ export function createMachine() {
     machine.cardMismatch=true;
     console.log("card missing");
   }
+  machine.rulezVl= function(name){
+    machine.rulezViolation=true;
+    machine.ruleName=name;
+    console.log("rulez Violation", name);
+  }
   machine.tableCb = function (type) {
     if (!machine.log.get(type))
       machine.log.set(type, 1);
@@ -109,7 +119,10 @@ export function createMachine() {
   machine.cM= function () {
     return (this.cardMismatch);
   }
-  machine.rc0= function () {
+  machine.rV= function () {
+    return (this.rulezViolation);
+  }
+machine.rc0= function () {
     return (this.rc ==0);
   }
   machine.rc1= function () {
@@ -150,22 +163,38 @@ export function createMachine() {
         return this.isE();
       case 'cM':
         return this.cM();
+      case 'rV':
+        return this.rV();
       default:
         console.log("predicate not found!");
     }
   }
   machine.stop = function () {
     console.log("shutdown");
-    this.dumpLog();
-
+    if(VERBOSE) this.dumpLog();
+    machine.stats = createStatistics(this.emptyBank, this.emptyDeck, this.ruleName, this.round,machine.log, machine.opt);
+    return machine.stats;
   }
   machine.dumpLog = function () {
     console.log (`rounds ${this.round}`);
     console.log(machine.log);
-console.log("options");
+    let no = Array.from(machine.log.values()).reduce((sum, item)=> sum+item);
+    console.log(`No of table moves ${no} as in ${no/this.round}`);
+    console.log("options");
     console.log(machine.opt);
   }
 
 
   return machine;
+}
+
+function createStatistics(win, deck, rule, rounds, moves, options) {
+  let stats = Object.create(null);
+  stats.win=win;
+  stats.deck=deck;
+  stats.rule=rule;
+  stats.rounds=rounds;
+  stats.moves=moves;
+  stats.options=options;
+  return stats;
 }

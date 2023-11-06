@@ -386,4 +386,89 @@ test ('ovrflow sequence 9-2.red',()  => {
     expect(findOverflow(bank15)).toEqual(result15);
 });
 
-                                                                            
+const bank16 =[
+new Card(1,'red'),
+new Card(8,'black'),
+new Card(2,'black'),
+new Card(4,'orange'),
+new Card(6,'orange'),
+new Card(8,'black'),
+new Card(9,'red'),
+new Card(7,'black'),
+new Card(8,'orange'),
+new Card(2,'orange'),
+new Card(4,'blue'),
+new Card(5,'black'),
+new Card(1,'orange'),
+new Card(9,'black'),
+new Card(6,'orange'),
+new Card(6,'red'),
+new Card(7,'blue'),
+new Card(1,'black'),
+];
+
+const result16 = new Array();
+result16.push(new RowO([
+    new Card(9,'black'),
+    new Card(1,'black'),
+    new Card(2,'black'),
+    ]));
+    
+    
+test ('overflow sequence 9-2.black',()  => {
+    expect(findOverflow(bank16)).toEqual(result16);
+});
+
+   const bank17 =[
+        new Card(3,'red'),
+        new Card(1,'blue'),
+        new Card(8,'blue'),
+        new Card(5,'orange'),
+        new Card(7,'red'),
+        new Card(7,'orange'),
+        new Card(9,'blue'),
+        new Card(8,'blue'),
+        new Card(2,'black'),
+        new Card(8,'orange'),
+        new Card(4,'black'),
+  ];
+            
+
+  const table17 =[];
+  table17.push([
+    new Card(4,'blue'),
+    new Card(4,'red'),
+    new Card(4,'black'),
+    ]);
+    table17.push([
+        new Card(4,'blue'),
+        new Card(4,'red'),
+        new Card(4,'orange'),
+        ]);
+    
+const result17 = new Array();
+result17.push(new Plus([
+    new Card(4,'black')
+]));
+
+test ('find bug',()  => {
+    expect(findPlus(bank17, table17)).toEqual(result17);
+});
+
+/**
+Bank***************************
+| 3-red| 1-blue| 8-blue| 5-orange| 7-red| 7-orange| 9-blue| 8-blue| 2-black| 8-orange| 4-black
+4-blue| 4-red| 4-black
+============================
+| 9-blue| 9-orange| 9-black
+============================
+| 6-red| 7-red| 8-red| 9-red| 1-red
+============================
+| 4-blue| 4-red| 4-orange/**
+| 1-red| 8-black| 2-black| 4-orange| 6-orange| 8-black| 9-red| 7-black| 8-orange| 2-orange| 4-blue| 5-black| 1-orange| 9-black| 6-orange| 6-red| 7-blue| 1-black                                                                            
+
+| 3-red| 4-red| 5-red| 6-red
+============================
+| 3-red| 3-black| 3-blue 
+
+| 9-black| 1-black| 9-black| 1-black| 2-black*/
