@@ -1,6 +1,7 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 import { Option, Right, RowT, RowS, RowO,   Left, Plus } from "./option.js";
 import { findTuple, findPlus, findSplit, findRight, findLeft, findOverflow,  findSequence} from "./futils.js";
+import {logger} from "./logger.js";
 
 export class Move {
   constructor(round) {
@@ -12,7 +13,7 @@ export class Move {
   }
 
   log() {
-    console.log(`round=${this.round} at=${this.message}`);
+    logger.debug(`round=${this.round} at=${this.message}`);
   }
 
   dispatch() {
