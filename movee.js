@@ -2,6 +2,7 @@ import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
 import { splitCard , plusCard} from "./tutils.js";
 import { rulez} from "./Rulez.js";
+import {logger} from "./logger.js";
 
 export function moveFactory(type, round, gstate, options, cb1, cb2) {
   let move;
@@ -192,7 +193,7 @@ export class Surface extends Move {
           if (row.length < Card.allColors.length) {
             if (this.type == "plus") row.push(this.cards[0]);
             if (this.count > 1) {
-              console.log('bis');
+              logger.debug('bis');
             }
             this.fromBank(this.cards[0]);
           }
@@ -224,7 +225,7 @@ export class End extends Move {
 
   execute() {
     super.log();
-    console.log(this.message);
+    logger.debug(this.message);
     return this.next;
   }
 }
