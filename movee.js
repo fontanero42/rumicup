@@ -3,6 +3,7 @@ import { Card, MAX_VALUE } from "./deck.js";
 import { splitCard , plusCard} from "./tutils.js";
 import { rulez} from "./Rulez.js";
 import {logger} from "./logger.js";
+const VERBOSE =false;
 
 export function moveFactory(type, round, gstate, options, cb1, cb2) {
   let move;
@@ -96,7 +97,7 @@ export class Surface extends Move {
  
   execute() {
     super.log();
-    this.dumpCard();
+    if(VERBOSE) this.dumpCard();
     this.callback(this.type);
     let bsize;
     switch (this.type) {
@@ -133,13 +134,13 @@ export class Surface extends Move {
   }
 
   dumpCard() {
-    let line = new String();
-    console.log("Card" + ".......................");
+    let line = [];
+    console.log("Card.......................");
     for (const element of this.cards) {
       line = line.concat(element.toString());
     }
     console.log(line);
-    console.log("................................");
+    console.log("...........................");
   }
 
 
@@ -147,7 +148,6 @@ export class Surface extends Move {
     let i;
     i = this.gstate.hand.bank.indexOf(card);
     this.gstate.hand.bank.take(i, 1);
-    //this.gstate.hand.bank.splice(i, 1);
     return i;
   }
 

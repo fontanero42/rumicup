@@ -1,3 +1,5 @@
+import {logger} from "./logger.js";
+
 const cards = [
   "1-red",
   "2-red",
@@ -90,7 +92,7 @@ export function factory() {
     d1[position] = new Card(item.split("-")[0], item.split("-")[1]);
   }
 
-  console.log(`trials ${m}`);
+  logger.debug(`trials ${m}`);
   d1.draw = function(){
     let card;
     if(d1.length>0){

@@ -1,9 +1,9 @@
-import { factory, Card } from "./deck.js";
-import { moveFactory} from "./movee.js";
-import { Find } from "./find.js";
+import { factory} from "./deck.js";
 import { createMachine } from "./central.js";
-
 import { TestCase1, TestCase2, TestCase3} from "./testcase.js";
+import {logger} from "./logger.js";
+const VERBOSE =false;
+
 
 const MAX_VALUE = 9;
 const INITIAL_BANK = 6;
@@ -12,17 +12,12 @@ const MIN_SEQUENCE = 3;
 
 class Hand {
   constructor(d1) {
-//    this.bank = new Array();
-    this.bank = new createBank();
+    this.bank =  createBank();
     for (let i = 0; i < INITIAL_BANK; i++) {
-      //this.draw(d1);
       this.bank.push(d1.shift());
     }
   }
 
-  draw(d1) {
-    this.bank.push(d1.shift());
-  }
 }
 
 function createBank() {
@@ -36,6 +31,16 @@ function createBank() {
 
 b1.register = function(cb){
     b1.callback = cb;
+  }
+
+  b1.toString= function(){
+    let s2='';
+    let s1="Bank***************************\n";
+    for (const element of b1) {
+      s2 = s2.concat(element.toString());
+    }
+    let s3="\n*******************************";
+    return s1+s2+s3;
   }
   return b1;
 }
@@ -51,51 +56,48 @@ class GameState {
       this.deck = factory();
     this.initialDeckSize = this.deck.length;
     this.hand = new Hand(this.deck);
-    this.moves = new Array();
     this.table = new Array();
-    this.winner = null;
+    this.data = new Array();
   }
 
   play(machine){
  let nx;
-
+ logger.info('Hello, world!');
+ logger.debug(this.hand.bank);
+ logger.trace(this.hand.bank);
+ 
     do {
       machine.execute(this);
-      this.dumpState();
+      //this.dumpState();
+      this.tallyCards();
       nx = machine.next(this);
     } while(nx != null);
+    return machine.stats;
   }
 
   register (cb){
     this.callback = cb;
   }
 
-  dumpState() {
-    let b=0;
-    let t=0;
-    let d=0;
-    b=this.dumpBank();
-    t=this.dumpTable();
-    d=this.deck.length;
-    let c=b+t+d
-    
-    console.log(`bank:${b} table:${t} deck:${d} cards:${c}`);
-    if(c!=this.initialDeckSize)
+  tallyCards() {
+    let b = 0;
+    let t = 0;
+    let d = 0;
+    b = this.hand.bank.length;
+    for (const row of this.table) {
+      t += row.length;
+    }
+    d = this.deck.length;
+    let c = b + t + d;
+    logger.debug(`bank:${b} table:${t} deck:${d} cards:${c}`);
+    if (c != this.initialDeckSize)
       this.callback();
   }
-
-  dumpBank() {
-    let c=0;
-    let line = new String();
-    console.log("Bank" + "***************************");
-    for (const element of this.hand.bank) {
-      line = line.concat(element.toString());
-      c++
-    }
-    console.log(line);
-    console.log("***************************");
-    return c;
+  dumpState() {
+    console.log(this.hand.bank.toString());
+    this.dumpTable();
   }
+
 
   dumpTable() {
     let c=0;
@@ -112,11 +114,25 @@ class GameState {
     return  c;
   }
 }
-
+const Data= new Array();
+for(let a=0; a<1;a++){
 const g = new GameState();
 let machine= createMachine();
 
 machine.init(g);
-g.play(machine);
-
+Data.push( g.play(machine));
+};
+debugger;
+console.log(Data);
 //console.log(new Card(1, "red").equals(new Card(1, "red")));
+const reducer =(map, val)=>{
+  if(map[val]== null) {
+    map[val]=1;
+   } else{
+    ++map[val];
+   }
+   return map;
+  };
+console.log(Data.map(item => item.rule).reduce(reducer,{}));
+console.log(Data.map(item => item.win).reduce(reducer,{}));
+console.log(Data.map(item => item.rounds).reduce(reducer,{}));

@@ -1,5 +1,6 @@
 import { rulezInit } from "./Rulez.js";
 import { moveFactory } from "./movee.js";
+import {logger} from "./logger.js";
 const VERBOSE =false;
 
 const transitions=[
@@ -61,7 +62,7 @@ export function createMachine() {
   }
 
   machine.execute = function (gstate) {
-    console.log('exec');
+    logger.debug('exec');
     this.rc=this.move.execute();
   }
 
@@ -84,20 +85,20 @@ export function createMachine() {
   }
   machine.deckCb= function(){
     machine.emptyDeck=true;
-    console.log("heureka");
+    logger.debug("heureka");
   }
   machine.bankCb= function(){
     machine.emptyBank=true;
-    console.log("hello");
+    logger.debug("hello");
   }
   machine.tallyCb= function(){
     machine.cardMismatch=true;
-    console.log("card missing");
+    logger.debug("card missing");
   }
   machine.rulezVl= function(name){
     machine.rulezViolation=true;
     machine.ruleName=name;
-    console.log("rulez Violation", name);
+    logger.debug("rulez Violation", name);
   }
   machine.tableCb = function (type) {
     if (!machine.log.get(type))
@@ -166,11 +167,11 @@ machine.rc0= function () {
       case 'rV':
         return this.rV();
       default:
-        console.log("predicate not found!");
+        logger.debug("predicate not found!");
     }
   }
   machine.stop = function () {
-    console.log("shutdown");
+    logger.debug("shutdown");
     if(VERBOSE) this.dumpLog();
     machine.stats = createStatistics(this.emptyBank, this.emptyDeck, this.ruleName, this.round,machine.log, machine.opt);
     return machine.stats;

@@ -1,10 +1,10 @@
 import { MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
+import {logger} from "./logger.js";
 
 export function createRule(name) {
   let rule = Object.create(null);
   rule.name = name;
   rule.isValid = true;
-//  rule.callback = machine;
   rule.register = function (cb){
     rule.callback = cb;
   }
@@ -12,7 +12,7 @@ export function createRule(name) {
   rule.action = function () {
     if (!this.isValid){
       this.callback(this.name);
-      console.log(this.name + "trigger");
+      logger.error(this.name + "trigger");
     }
   }
   return rule;
