@@ -68,10 +68,10 @@ export class Chose extends Move {
   }
 
   best() {
-    let first = { valor: 0 };
+    let first = { getCost: 0 };
     for (const choice of this.options) {
       if (choice) {
-        if (choice.valor > first.valor) first = choice;
+        if (choice.getCost > first.getCost) first = choice;
       }
     }
     return first;

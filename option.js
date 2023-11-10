@@ -3,12 +3,18 @@ export class Option {
       this.cards = new Array();
       this.valor = 0;
       this.count = 0;
+      this.a=1;
+      this.b=5;
+      this.bias=0;
       this.overflow = false;
       for (let item of cards) {
         this.cards.push(item);
         this.valor += item.valor;
         this.count ++;
       }
+    }
+    get getCost() {
+        return this.a*this.valor+this.b*this.count+this.bias;  
     }
   }
   
@@ -39,6 +45,7 @@ export class Option {
     constructor(cards) {
       super(cards);
       this.type = "rowS";
+      this.bias = 10;
     }
   }
 
