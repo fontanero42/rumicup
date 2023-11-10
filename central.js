@@ -54,6 +54,7 @@ export function createMachine() {
     this.ruleName='';
     this.log=new Map();
     this.opt=new Map();  
+    this.cnt=new Map();  
     gstate.deck.register(machine.deckCb);
     gstate.hand.bank.register(machine.bankCb);
     gstate.register(machine.tallyCb );
@@ -107,11 +108,15 @@ export function createMachine() {
       machine.log.set(type, machine.log.get(type)+1);
   }
   machine.optionsCb = function (options) {
+    if (!machine.cnt.get(options.length))
+      machine.cnt.set(options.length, 1);
+    else
+      machine.cnt.set(options.length, machine.cnt.get(options.length) + 1);
     for (const item of options) {
       if (!machine.opt.get(item.type))
         machine.opt.set(item.type, 1);
       else
-        machine.opt.set(item.type, machine.log.get(item.type) + 1);
+        machine.opt.set(item.type, machine.opt.get(item.type) + 1);
     }
   }
   machine.isE= function () {
@@ -173,7 +178,7 @@ machine.rc0= function () {
   machine.stop = function () {
     logger.debug("shutdown");
     if(VERBOSE) this.dumpLog();
-    machine.stats = createStatistics(this.emptyBank, this.emptyDeck, this.ruleName, this.round,machine.log, machine.opt);
+    machine.stats = createStatistics(this.emptyBank, this.emptyDeck, this.ruleName, this.round,machine.log, machine.opt,machine.cnt);
     return machine.stats;
   }
   machine.dumpLog = function () {
@@ -189,7 +194,7 @@ machine.rc0= function () {
   return machine;
 }
 
-function createStatistics(win, deck, rule, rounds, moves, options) {
+function createStatistics(win, deck, rule, rounds, moves, options, count) {
   let stats = Object.create(null);
   stats.win=win;
   stats.deck=deck;
@@ -197,5 +202,6 @@ function createStatistics(win, deck, rule, rounds, moves, options) {
   stats.rounds=rounds;
   stats.moves=moves;
   stats.options=options;
+  stats.count=count;
   return stats;
 }

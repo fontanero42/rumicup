@@ -115,14 +115,14 @@ class GameState {
   }
 }
 const Data= new Array();
-for(let a=0; a<1;a++){
+for(let a=0; a<10;a++){
 const g = new GameState();
 let machine= createMachine();
 
 machine.init(g);
 Data.push( g.play(machine));
 };
-debugger;
+
 console.log(Data);
 //console.log(new Card(1, "red").equals(new Card(1, "red")));
 const reducer =(map, val)=>{
