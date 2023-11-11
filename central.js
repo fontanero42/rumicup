@@ -74,13 +74,14 @@ export function createMachine() {
     }
     this.options =this.move.options;
     this.round = this.move.round;
+    this.choice = this.move.choice;
     let newStates = this.graph[this.state];
     // select newstate
 
     for (const item of newStates) {
       if (this.predicate(item.cond)) {
         this.state = item.to;
-        return this.move = moveFactory(item.to, this.round, gstate,this.options,machine.tableCb,machine.optionsCb);
+        return this.move = moveFactory(item.to, this.round, gstate,this.options,this.choice,machine.tableCb,machine.optionsCb);
       }
     }
   }

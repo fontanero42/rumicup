@@ -1,5 +1,14 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 
+export function newRow(bank, table, cards) {
+  const row = new Array();
+  for (const card of cards) {
+    fromBank(card, bank);
+    row.push(card);
+  }
+  table.push(row);
+  return table;
+}
 
 export function plusCard(bank, table, cards) {
   const valor = cards[0].valor;

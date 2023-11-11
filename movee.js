@@ -1,11 +1,11 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
-import { splitCard , plusCard} from "./tutils.js";
+import { newRow, splitCard , plusCard} from "./tutils.js";
 import { rulez} from "./Rulez.js";
 import {logger} from "./logger.js";
 const VERBOSE =false;
 
-export function moveFactory(type, round, gstate, options, cb1, cb2) {
+export function moveFactory(type, round, gstate, options, choice, cb1, cb2) {
   let move;
   switch (type) {
     case 'start':
@@ -24,7 +24,7 @@ export function moveFactory(type, round, gstate, options, cb1, cb2) {
       move = new Chose(round, gstate, options);
       break;
     case 'table':
-      move = new Surface(round, gstate, options, false, cb1);
+      move = new Surface(round, gstate, choice, false, cb1);
       break;
     case 'end':
       move = new End(round, gstate, 'finis');
@@ -61,10 +61,11 @@ export class Chose extends Move {
 
   execute() {
     super.log();
-    const option = this.best();
-    if (option.valor == 0) return new Yield(this.round, this.gstate);
-    this.options = option;
-    return option;
+    const choice = this.best();
+    //const choice = this.randomChoice();
+    //if (choice.valor == 0) return new Yield(this.round, this.gstate);
+    this.choice = choice;
+    return choice;
   }
 
   best() {
@@ -76,20 +77,25 @@ export class Chose extends Move {
     }
     return first;
   }
+
+  randomChoice() {
+    const position = Math.floor(Math.random() * this.options.length);
+    return this.options[position];
+  }
 }
 
 export class Surface extends Move {
-  constructor(round, gstate, option, last, cb) {
+  constructor(round, gstate, choice, last, cb) {
     super(round);
-    super.message = "table " + option.type;
+    super.message = "table " + choice.type;
     this.gstate = gstate;
-    for (let item of option.cards) {
+    for (let item of choice.cards) {
       this.cards.push(item);
     }
-    this.type = option.type;
+    this.type = choice.type;
     this.last = last;
-    this.count = option.count;
-    this.overflow = option.overflow;
+    this.count = choice.count;
+    this.overflow = choice.overflow;
     this.callback = cb;
     this.callbackRulez = rulez;
   }
@@ -108,13 +114,13 @@ export class Surface extends Move {
         bsize = this.joinCard();
         break;
       case "rowT":
-        bsize = this.newRow();
+        bsize = newRow(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
       case "rowS":
-        bsize = this.newRow();
+        bsize = newRow(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
       case "rowO":
-        bsize = this.newRow();
+        bsize = newRow(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
       case "plus":
         bsize = plusCard(this.gstate.hand.bank, this.gstate.table, this.cards);

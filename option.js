@@ -54,6 +54,7 @@ export class Option {
       super(cards);
       super.overflow=true;
       this.type = "rowO";
+    //  this.bias = 10;
     }
   }
   

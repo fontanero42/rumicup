@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { plusCard, splitCard} from "./tutils.js";
+import { newRow, plusCard, splitCard} from "./tutils.js";
 
 const bank6 =[new Card(1,'orange'),
 new Card(5,'red'),
@@ -217,4 +217,36 @@ result24.push([
 
 test ('plus card 7-orange',()  => {
     expect(plusCard(bank24, table24, cards24)).toEqual(result24);
+});
+
+const bank25 =[
+    new Card(4,'red'),
+    new Card(1,'blue'),
+    new Card(8,'blue'),
+    new Card(5,'orange'),
+    new Card(7,'red'),
+    new Card(7,'orange'),
+    new Card(4,'blue'),
+    new Card(8,'blue'),
+    new Card(2,'black'),
+    new Card(8,'orange'),
+    new Card(4,'black'),
+];  
+
+const table25 =[];
+    const cards25 =new Array();
+    cards25.push(
+        new Card(4,'blue'),
+        new Card(4,'red'),
+            new Card(4,'black'),
+    );
+        
+const result25 = new Array();
+result25.push([
+new Card(4,'blue'),
+new Card(4,'red'),
+new Card(4,'black'),
+]);
+test ('new row vanilla tuple',()  => {
+expect(newRow(bank25, table25, cards25)).toEqual(result25);
 });
