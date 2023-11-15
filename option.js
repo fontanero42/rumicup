@@ -49,6 +49,14 @@ export class Option {
     }
   }
 
+  export class RowC extends Option {
+    constructor(cards) {
+      super(cards);
+      this.type = "rowC";
+      this.bias = 10;
+    }
+  }
+
   export class RowO extends Option {
     constructor(cards) {
       super(cards);

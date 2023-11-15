@@ -1,5 +1,5 @@
-import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { ruleValD, ruleColD, ruleMaxS, ruleMinT } from "./Rulez.js";
+import { Card} from "./deck.js";
+import { ruleValD, ruleColD, ruleMaxS, ruleMinT, ruleOffS } from "./Rulez.js";
 import {jest} from '@jest/globals'
 
 const row30 =[
@@ -107,7 +107,37 @@ const result36 = false;
 test ('Rulez Valor Duplicate 7-orange',()  => {
     expect(ruleValD.check(row36)).toEqual(result36);
 });
-/**
-test ('Rulez Row lemgth < min tupple',()  => {
-    expect(ruleMinT.check(row35 )).toEqual(result34);
-});*/
+
+const row37 =[
+    new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+];
+const result37= true;
+ruleOffS.action=jest.fn();
+
+test ('Rulez Row sequence offset',()  => {
+
+    expect(ruleOffS.check(row37)).toEqual(result37);
+    expect(ruleOffS.action).toHaveBeenCalled();
+});
+const row38 =[
+    new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+];
+const result38= false;
+ruleOffS.action=jest.fn();
+
+test ('Rulez Row sequence offset',()  => {
+
+    expect(ruleOffS.check(row38)).toEqual(result38);
+    expect(ruleOffS.action).toHaveBeenCalled();
+});

@@ -1,6 +1,6 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
-import { newRow, splitCard , plusCard} from "./tutils.js";
+import { newRow, splitCard , plusCard, newCombo} from "./tutils.js";
 import { rulez} from "./Rulez.js";
 import {logger} from "./logger.js";
 const VERBOSE =false;
@@ -103,7 +103,7 @@ export class Surface extends Move {
  
   execute() {
     super.log();
-    if(VERBOSE) this.dumpCard();
+    if (VERBOSE) this.dumpCard();
     this.callback(this.type);
     let bsize;
     switch (this.type) {
@@ -122,6 +122,9 @@ export class Surface extends Move {
       case "rowO":
         bsize = newRow(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
+      case "rowC":
+        bsize = newCombo(this.gstate.hand.bank, this.gstate.table, this.cards);
+        break;
       case "plus":
         bsize = plusCard(this.gstate.hand.bank, this.gstate.table, this.cards);
         break;
@@ -130,7 +133,7 @@ export class Surface extends Move {
         break;
       default:
         return -1;
-     }
+    }
     this.callbackRulez(this.gstate.table);
     if (bsize < 1) return -1;
     if (this.overflow) return 1;
@@ -229,7 +232,7 @@ export class End extends Move {
     this.gstate = gstate;
   }
 
-  execute() {
+  execute(gstate) {
     super.log();
     logger.debug(this.message);
     return this.next;

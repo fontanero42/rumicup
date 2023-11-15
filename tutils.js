@@ -1,5 +1,52 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
 
+export function newCombo(bank, table, cards) {
+  const newRow = new Array();
+  for (const card of cards) {
+    if(card.imagine == true) {
+      newRow.push(card);
+      fromTable(card, table);
+    } else {
+      newRow.push(card);
+      fromBank(card, bank);
+    }
+  }
+  table.push(newRow);
+  normTable(table);
+  return table;
+}
+export function normTable(table){
+  for (const row of table) {
+    for (const card of row) {
+    card.imagine=undefined;
+  }
+  }
+}
+export function fromTable (card, table){
+  let ix;
+  for (const row of table) {
+    if (row[0].valor != row[1].valor) {
+      if (row.length > MIN_SEQUENCE) {
+//        ix=row.findIndex((item) => item.valor ==card.valor && item.color==card.color);
+        ix=row.indexOf(card);
+
+      }
+    }
+    if (row[0].valor == row[1].valor) {
+      if (row.length > TUPPLE_THRESHOLD) {
+//        ix=row.findIndex((item) => item.valor ==card.valor && item.color==card.color); 
+        ix=row.indexOf(card);
+      }
+    }
+    if(ix>=0){
+      card=row.splice(ix, 1);
+//      console.log(card);
+      return card;
+    }
+  }
+debugger
+  return null;  
+}
 export function newRow(bank, table, cards) {
   const row = new Array();
   for (const card of cards) {
@@ -66,16 +113,16 @@ export function hasDuplicate(table, card) {
 }
     
 
-function      fromBank(card, bank) {
-      let i;
-      i = bank.findIndex(
-        (element) => element.color == card.color && element.valor == card.valor
-      );
- //     i = bank.indexOf(card);
-      //bank.take(i, 1);
-      bank.splice(i, 1);
-      return i;
-    }
+function fromBank(card, bank) {
+  let i;
+  /**i = bank.findIndex(
+    (element) => element.color == card.color && element.valor == card.valor
+  );*/
+  i = bank.indexOf(card);
+  bank.take(i, 1);
+  //     bank.splice(i, 1);
+  return i;
+}
 /**const bank =[new Card(1,'orange'),
     new Card(6,'red'),
     new Card(2,'red'),

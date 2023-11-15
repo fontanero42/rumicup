@@ -64,7 +64,7 @@ export function createMachine() {
 
   machine.execute = function (gstate) {
     logger.debug('exec');
-    this.rc=this.move.execute();
+    this.rc=this.move.execute(gstate);
   }
 
   machine.next = function (gstate) {
@@ -186,9 +186,9 @@ machine.rc0= function () {
     console.log (`rounds ${this.round}`);
     console.log(machine.log);
     let no = Array.from(machine.log.values()).reduce((sum, item)=> sum+item);
-    console.log(`No of table moves ${no} as in ${no/this.round}`);
+    /**console.log(`No of table moves ${no} as in ${no/this.round}`);
     console.log("options");
-    console.log(machine.opt);
+    console.log(machine.opt);*/
   }
 
 

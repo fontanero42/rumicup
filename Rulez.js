@@ -14,11 +14,13 @@ export function createRule(name) {
       this.callback(this.name);
       logger.error(this.name + "trigger");
     }
-  }
+  }     
   return rule;
 }
 
 export const ruleMinS = createRule('MinimumSequence');
+
+export const ruleOffS = createRule('OffsetSequence');
 
 export const ruleMinT = createRule('MinimumTupple');
 
@@ -35,6 +37,7 @@ export const rulez = function (table) {
     ruleMinT.check(row);
     ruleColD.check(row);
     ruleValD.check(row);
+    ruleOffS.check(row);
   }
 }
 export const rulezInit=function(cb) {
@@ -43,6 +46,7 @@ export const rulezInit=function(cb) {
   ruleMinT.register(cb);
   ruleColD.register(cb);
   ruleValD.register(cb);
+  ruleOffS.register(cb);
 }
 
 ruleMinS.check = function (row) {
@@ -52,6 +56,23 @@ ruleMinS.check = function (row) {
   }
   ruleMinS.action();
   return ruleMinS.isValid;
+}
+
+ruleOffS.check = function (row) {
+  const ref=[1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8];
+  if (row.length > MIN_SEQUENCE) {
+    if (row[0].color == row[1].color){
+      let nr=row.map((e) => e.valor);
+      let off=ref.indexOf(nr[0]);
+      let part=ref.slice(off,off+row.length);
+      let s1=part.reduce((sum,e)=>sum+e,0);
+      let s2=nr.reduce((sum,e) =>sum+e,0);
+      if(s1!=s2)
+        ruleOffS.isValid = false;
+    }   
+  }
+  ruleOffS.action();
+  return ruleOffS.isValid;
 }
 
 ruleMaxS.check = function (row) {

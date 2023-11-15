@@ -1,6 +1,7 @@
 import { Card} from "./deck.js";
-import { findTuple, findPlus, findSplit, findRight, findLeft, findSequence, findOverflow} from "./futils.js";
-import { RowT, RowS, RowO, Plus, Middle, Right, Left} from "./option.js";
+import { findTuple, findPlus, findSplit, findRight, findLeft, findSequence, findOverflow, findWishList, findCombi} from "./futils.js";
+import { RowT, RowS, RowO, RowC, Plus, Middle, Right, Left} from "./option.js";
+import { newRow } from "./tutils.js";
 
 
 const bank= new Array();
@@ -455,20 +456,97 @@ test ('find bug',()  => {
     expect(findPlus(bank17, table17)).toEqual(result17);
 });
 
-/**
-Bank***************************
-| 3-red| 1-blue| 8-blue| 5-orange| 7-red| 7-orange| 9-blue| 8-blue| 2-black| 8-orange| 4-black
-4-blue| 4-red| 4-black
-============================
-| 9-blue| 9-orange| 9-black
-============================
-| 6-red| 7-red| 8-red| 9-red| 1-red
-============================
-| 4-blue| 4-red| 4-orange/**
-| 1-red| 8-black| 2-black| 4-orange| 6-orange| 8-black| 9-red| 7-black| 8-orange| 2-orange| 4-blue| 5-black| 1-orange| 9-black| 6-orange| 6-red| 7-blue| 1-black                                                                            
+const table24 =new Array();
+table24.push([
+    new Card(4,'black'),
+    new Card(4,'red'),
+    new Card(4,'blue'),
+    new Card(4,'orange'),
+    ]);
 
-| 3-red| 4-red| 5-red| 6-red
-============================
-| 3-red| 3-black| 3-blue 
+    table24.push([
+        new Card(4,'black'),
+        new Card(5,'black'),
+        new Card(6,'black'),
+        new Card(7,'black'),
+        ]);
+    
+table24.push([
+new Card(7,'orange'),
+new Card(8,'orange'),
+new Card(9,'orange'),
+new Card(1,'orange'),
+new Card(2,'orange'),
+new Card(3,'orange'),
+new Card(4,'orange'),
+]);
+const result24 = [
+    new Card(4,'black'),
+    new Card(4,'red'),
+    new Card(4,'blue'),
+    new Card(4,'orange'),
+    new Card(4,'black'),
+    new Card(7,'black'),
+new Card(7,'orange'),
+new Card(4,'orange'),
+];
+test ('wishlist',()  => {
+    expect(findWishList(table24)).toEqual(result24);
+});
+const bank25 =new Array();
+bank25.push(
+    new Card(5,'red'),
+    new Card(6,'red'),
+)
+const table25 =new Array();
+table25.push([
+    new Card(4,'black'),
+    new Card(4,'red'),
+    new Card(4,'blue'),
+    new Card(4,'orange'),
+    ]);
+    const  c221=  new Card(4,'red');
+    c221.imagine = true;
+    const  c222=  new Card(5,'red');
+    c222.imagine = false;
+    const  c223=  new Card(6,'red');
+    c223.imagine = false;
+    const result25 = new Array(); 
+    result25.push(new RowC(
+     [
+        c221,
+        c222,
+        c223,
+    ]));
+    /**
+    result25.map(card =>  {
+        {card.imagine = true}
+        });
+         */ 
+    test ('wishlist',()  => {
+        expect(findCombi(bank25, table25)).toEqual(result25);
+    });
 
-| 9-black| 1-black| 9-black| 1-black| 2-black*/
+const bank26 =new Array();
+bank26.push(
+    new Card(6,'red'),
+)
+const table26 =new Array();
+table26.push([
+    new Card(4,'black'),
+    new Card(4,'red'),
+    new Card(4,'blue'),
+    new Card(4,'orange'),
+    ]);
+    table26.push([
+        new Card(5,'black'),
+        new Card(5,'red'),
+        new Card(5,'blue'),
+        new Card(5,'orange'),
+        ]);
+    
+    const result26 = new Array(); 
+    test ('wishlist 2* imagine true',()  => {
+        expect(findCombi(bank26, table26)).toEqual(result26);
+    });
+

@@ -100,30 +100,31 @@ class GameState {
 
 
   dumpTable() {
-    let c=0;
     console.log("Table" + "============================");
     for (const set of this.table) {
       let line = new String();
       for (const element of set) {
         line = line.concat(element.toString());
-        c++;
       }
       console.log(line);
       console.log("============================");
     }
-    return  c;
   }
 }
 const Data= new Array();
-for(let a=0; a<10;a++){
+for(let a=0; a<10000;a++){
 const g = new GameState();
 let machine= createMachine();
 
 machine.init(g);
 Data.push( g.play(machine));
+if(Data[Data.length-1].rule!='') {
+  g.dumpTable();
+  break ;
+}
 };
 
-console.log(Data);
+//console.log(Data);
 //console.log(new Card(1, "red").equals(new Card(1, "red")));
 const reducer =(map, val)=>{
   if(map[val]== null) {

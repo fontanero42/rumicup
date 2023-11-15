@@ -1,5 +1,5 @@
 import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
-import { RowT, RowS, RowO, Plus, Middle, Right, Left } from "./option.js";
+import { RowT, RowS, RowO, RowC, Plus, Middle, Right, Left } from "./option.js";
 /**
 * find a tuple of cards on player's bank.
 * @generator
@@ -7,6 +7,47 @@ import { RowT, RowS, RowO, Plus, Middle, Right, Left } from "./option.js";
 * @param bank 
 * @yields {yieldDataType} Brief description of yielded items here.
 */
+
+export function findCombi(bank, table) {
+  let options = new Array();
+  let all;
+  let wish = findWishList(table);
+  if (wish.length > 0) {
+    wish.map(card => {card.imagine=true});
+    bank.map(card => {card.imagine=false});
+    let universe = bank.concat(wish);
+    all = findSequence(universe, true);
+    //filter imagine
+    for (const item of all) {
+      if(item.cards.filter((card) => card.imagine==true).length<2){
+        options.push(item);
+      }
+    }
+  }
+  //console.log(options );
+  return options;
+}
+
+export function findWishList(table) {
+  const list = new Array();
+  if (table.length > 0) {
+    for (const row of table) {
+      if (row[0].valor != row[1].valor) {
+        if (row.length > MIN_SEQUENCE) {
+          list.push(row[0]);
+          list.push(row[row.length - 1]);
+        }
+      }
+      if (row[0].valor == row[1].valor) {
+        if (row.length > TUPPLE_THRESHOLD) {
+          list.push(...row);
+        }
+      }
+    }
+  }
+  return [... new Set(list)];
+}
+
 export function findTuple(bank) {
   const options = new Array();
   const tuple = new Array(MAX_VALUE + 1);
@@ -178,7 +219,7 @@ export function findLeft(bank, table) {
 }
 
 
-export function findSequence(bank) {
+export function findSequence(bank, combo=false) {
   const options = new Array();
   let collector = new Array();
   //sort by color and add sequentially
@@ -216,7 +257,10 @@ export function findSequence(bank) {
         );
         cards.push(bank[ix]);
       }
-      options.push(new RowS(cards));
+      if(combo)
+        options.push(new RowC(cards));
+      else
+        options.push(new RowS(cards));
       cards = [];
     }
     collector = [];
