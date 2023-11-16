@@ -1,5 +1,6 @@
-import { Card, MAX_VALUE, MIN_SEQUENCE, TUPPLE_THRESHOLD } from "./deck.js";
+import { Card } from "./deck.js";
 import { newRow, plusCard, splitCard} from "./tutils.js";
+import {jest} from '@jest/globals';
 
 const bank6 =[new Card(1,'orange'),
 new Card(5,'red'),
@@ -40,12 +41,14 @@ new Card(9,'red'),
 ]);
 
 test ('split card 5-red for sequence 2-9.red ',()  => {
+    bank6.take= jest.fn();
     expect(splitCard(bank6, table6, cards6)).toEqual(result6);
+    expect(bank6.take).toHaveBeenCalled();
 });
 
 
 const bank22 =[new Card(4,'orange'),
-new Card(9,'orange'),
+new Card(9  ,'orange'),
 new Card(1,'orange'),
 new Card(2,'orange'),
 new Card(4,'red'),
@@ -108,7 +111,9 @@ result22.push([
     new Card(4,'orange'),
     ]);
 test ('split card ',()  => {
+    bank22.take= jest.fn();
     expect(splitCard(bank22, table22, cards22)).toEqual(result22);
+    expect(bank22.take).toHaveBeenCalled();
 });
 
 const bank23 =[new Card(7,'orange'),
@@ -168,8 +173,10 @@ result23.push([
     new Card(4,'orange'),
     ]);
     test ('plus card 7-orange',()  => {
+        bank23.take= jest.fn();
         expect(plusCard(bank23, table23, cards23)).toEqual(result23);
-    });
+        expect(bank23.take).toHaveBeenCalled();
+});
     
     const bank24 =[
         new Card(3,'red'),
@@ -216,7 +223,9 @@ result24.push([
     ]);
 
 test ('plus card 7-orange',()  => {
+    bank24.take= jest.fn();
     expect(plusCard(bank24, table24, cards24)).toEqual(result24);
+    expect(bank24.take).toHaveBeenCalled();
 });
 
 const bank25 =[
@@ -248,5 +257,7 @@ new Card(4,'red'),
 new Card(4,'black'),
 ]);
 test ('new row vanilla tuple',()  => {
-expect(newRow(bank25, table25, cards25)).toEqual(result25);
+    bank25.take= jest.fn();
+    expect(newRow(bank25, table25, cards25)).toEqual(result25);
+    expect(bank25.take).toHaveBeenCalled();
 });
