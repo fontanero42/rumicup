@@ -1,6 +1,6 @@
 import { Move, Find, Yield } from "./find.js";
 import { Card, MAX_VALUE } from "./deck.js";
-import { newRow, splitCard , plusCard, newCombo} from "./tutils.js";
+import { newRow, splitCard , plusCard, newCombo, joinCard} from "./tutils.js";
 import { rulez} from "./Rulez.js";
 import {logger} from "./logger.js";
 const VERBOSE =false;
@@ -108,10 +108,10 @@ export class Surface extends Move {
     let bsize;
     switch (this.type) {
       case "right":
-        bsize = this.joinCard();
+        bsize = joinCard(this.gstate.hand.bank, this.gstate.table, this.cards,this.type);
         break;
       case "left":
-        bsize = this.joinCard();
+        bsize = joinCard(this.gstate.hand.bank, this.gstate.table, this.cards,this.type);
         break;
       case "rowT":
         bsize = newRow(this.gstate.hand.bank, this.gstate.table, this.cards);

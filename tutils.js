@@ -27,14 +27,12 @@ export function fromTable (card, table){
   for (const row of table) {
     if (row[0].valor != row[1].valor) {
       if (row.length > MIN_SEQUENCE) {
-//        ix=row.findIndex((item) => item.valor ==card.valor && item.color==card.color);
         ix=row.indexOf(card);
 
       }
     }
     if (row[0].valor == row[1].valor) {
       if (row.length > TUPPLE_THRESHOLD) {
-//        ix=row.findIndex((item) => item.valor ==card.valor && item.color==card.color); 
         ix=row.indexOf(card);
       }
     }
@@ -72,7 +70,6 @@ export function plusCard(bank, table, cards) {
       }
     }
   }
-  //return this.gstate.hand.bank.length;
   return table;
 }
 
@@ -102,7 +99,41 @@ export function splitCard(bank, table, cards ) {
     return table;
   }
 
-export function hasDuplicate(table, card) {
+  export function joinCard(bank, table, cards, type) {
+    const color = cards[0].color;
+    for (const row of table) {
+      if (row[0].valor != row[1].valor) {
+        if (row[0].color == color) {
+          // ToDo check forrr duplicatee rrrow
+          if (row.length < MAX_VALUE) {
+            if (checkRow(type, row, cards[0])) {
+              fromBank(cards[0],bank);
+              return table;
+            }
+          }
+        }
+      }
+    }
+    return table;
+  }
+
+  export function checkRow(type, row, card) {
+    if (type == 'right') {
+      if (row[row.length - 1].valor % MAX_VALUE == card.valor - 1) {
+        row.push(card);
+        return true;
+      }
+    } else {
+      if (card.valor % MAX_VALUE == row[0].valor - 1) {
+        row.unshift(card);
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  export function hasDuplicate(table, card) {
   let i = 0;
   for (const row of table) {
     if (row.find((e) => e.valor == card.valor && e.color == card.color)) i++;
@@ -120,6 +151,5 @@ export function fromBank(card, bank) {
   );*/
   i = bank.indexOf(card);
   bank.take(i, 1);
-  //     bank.splice(i, 1);
   return i;
 }

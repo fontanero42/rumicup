@@ -1,7 +1,7 @@
 import { rulezInit } from "./Rulez.js";
 import { moveFactory } from "./movee.js";
 import {logger} from "./logger.js";
-const VERBOSE =false;
+const VERBOSE =true;
 
 const transitions=[
 'start~find~eqT',
@@ -186,9 +186,9 @@ machine.rc0= function () {
     console.log (`rounds ${this.round}`);
     console.log(machine.log);
     let no = Array.from(machine.log.values()).reduce((sum, item)=> sum+item);
-    /**console.log(`No of table moves ${no} as in ${no/this.round}`);
+    console.log(`No of table moves ${no} as in ${no/this.round}`);
     console.log("options");
-    console.log(machine.opt);*/
+    console.log(machine.opt);
   }
 
 

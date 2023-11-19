@@ -1,5 +1,5 @@
 import { Card } from "./deck.js";
-import { newRow, plusCard, splitCard} from "./tutils.js";
+import { joinCard, newRow, plusCard, splitCard} from "./tutils.js";
 import {jest} from '@jest/globals';
 
 const bank6 =[new Card(1,'orange'),
@@ -260,4 +260,117 @@ test ('new row vanilla tuple',()  => {
     bank25.take= jest.fn();
     expect(newRow(bank25, table25, cards25)).toEqual(result25);
     expect(bank25.take).toHaveBeenCalled();
+});
+
+const bank26 =[
+    new Card(4,'red'),
+    new Card(1,'blue'),
+    new Card(8,'blue'),
+    new Card(5,'orange'),
+    new Card(3,'red'),
+    new Card(7,'orange'),
+    new Card(4,'blue'),
+    new Card(8,'blue'),
+    new Card(2,'black'),
+    new Card(8,'orange'),
+    new Card(4,'black'),
+];  
+
+const table26 =[];
+table26.push([
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+]);
+    
+const cards26 =[
+    new Card(3,'red'),
+];
+        
+const result26 = new Array();
+result26.push([
+    new Card(3,'red'),
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+]);
+test ('join card left 3-6.red',()  => {
+    bank26.take= jest.fn();
+    expect(joinCard(bank26, table26, cards26, 'left')).toEqual(result26);
+    expect(bank26.take).toHaveBeenCalled();
+});
+
+const bank27 =[
+    new Card(4,'red'),
+    new Card(1,'blue'),
+    new Card(8,'blue'),
+    new Card(5,'orange'),
+    new Card(7,'red'),
+    new Card(7,'orange'),
+    new Card(4,'blue'),
+    new Card(8,'blue'),
+    new Card(2,'black'),
+    new Card(8,'orange'),
+    new Card(4,'black'),
+];  
+
+const table27 =[];
+table27.push([
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+]);
+    
+const cards27 =[
+    new Card(7,'red'),
+];
+        
+const result27 = new Array();
+result27.push([
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+    new Card(7,'red'),
+]);
+test ('join card right 4-7.red',()  => {
+    bank27.take= jest.fn();
+    expect(joinCard(bank27, table27, cards27, 'right')).toEqual(result27);
+    expect(bank27.take).toHaveBeenCalled();
+});
+const bank28 =[
+    new Card(4,'red'),
+    new Card(1,'blue'),
+    new Card(8,'blue'),
+    new Card(5,'orange'),
+    new Card(3,'red'),
+    new Card(7,'orange'),
+    new Card(4,'blue'),
+    new Card(8,'blue'),
+    new Card(2,'black'),
+    new Card(8,'orange'),
+    new Card(4,'black'),
+];  
+
+const table28 =[];
+table28.push([
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+]);
+    
+const cards28 =[
+    new Card(3,'red'),
+];
+        
+const result28 = new Array();
+result28.push([
+    new Card(3,'red'),
+    new Card(4,'red'),
+    new Card(5,'red'),
+    new Card(6,'red'),
+]);
+test ('join card left 3-6.red',()  => {
+    bank28.take= jest.fn();
+    expect(joinCard(bank28, table28, cards28, 'left')).toEqual(result28);
+    expect(bank28.take).toHaveBeenCalled();
 });
