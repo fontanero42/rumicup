@@ -112,7 +112,7 @@ class GameState {
   }
 }
 const Data= new Array();
-for(let a=0; a<10;a++){
+for(let a=0; a<1;a++){
 const g = new GameState();
 let machine= createMachine();
 

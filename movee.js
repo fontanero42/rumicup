@@ -5,7 +5,7 @@ import { rulez} from "./Rulez.js";
 import {logger} from "./logger.js";
 const VERBOSE =false;
 
-export function moveFactory(type, round, gstate, options, choice, cb1, cb2) {
+export function moveFactory(type, round, gstate, options, choice, cb1, cb2, cbSnapshot) {
   let move;
   switch (type) {
     case 'start':
@@ -18,7 +18,7 @@ export function moveFactory(type, round, gstate, options, choice, cb1, cb2) {
       move = new Draw(round, gstate);
       break;
     case 'yield':
-      move = new Yield(round, gstate);
+      move = new Yield(round, gstate, cbSnapshot);
       break;
     case 'chose':
       move = new Chose(round, gstate, options);

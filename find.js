@@ -58,15 +58,17 @@ export class Find extends Move {
 }
 
 export class Yield extends Move {
-  constructor(round, gstate) {
+  constructor(round, gstate, cbSnapshot) {
     super(round);
     super.message = "yield";
     this.gstate = gstate;
+    this.callback= cbSnapshot;
   }
 
-  execute() {
+  execute(gstate) {
     super.log();
     this.round++;
-    return new Find(this.round, this.gstate);
+//    return new Find(this.round, this.gstate);
+    this.callback(this.round,gstate.table);
   }
 }

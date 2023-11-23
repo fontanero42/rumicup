@@ -1,6 +1,7 @@
 import { rulezInit } from "./Rulez.js";
 import { moveFactory } from "./movee.js";
 import {logger} from "./logger.js";
+import fs from  "fs"
 const VERBOSE =true;
 
 const transitions=[
@@ -55,6 +56,7 @@ export function createMachine() {
     this.log=new Map();
     this.opt=new Map();  
     this.cnt=new Map();  
+    machine.album=createAlbum();
     gstate.deck.register(machine.deckCb);
     gstate.hand.bank.register(machine.bankCb);
     gstate.register(machine.tallyCb );
@@ -81,7 +83,7 @@ export function createMachine() {
     for (const item of newStates) {
       if (this.predicate(item.cond)) {
         this.state = item.to;
-        return this.move = moveFactory(item.to, this.round, gstate,this.options,this.choice,machine.tableCb,machine.optionsCb);
+        return this.move = moveFactory(item.to, this.round, gstate,this.options,this.choice,machine.tableCb,machine.optionsCb,machine.snapshot);
       }
     }
   }
@@ -96,6 +98,10 @@ export function createMachine() {
   machine.tallyCb= function(){
     machine.cardMismatch=true;
     logger.debug("card missing");
+  }
+  machine.snapshot= function(round, table){
+    machine.album.generation[round]=[...table];
+    logger.debug("snapshot",round);
   }
   machine.rulezVl= function(name){
     machine.rulezViolation=true;
@@ -178,6 +184,9 @@ machine.rc0= function () {
   }
   machine.stop = function () {
     logger.debug("shutdown");
+    fs.writeFile('album.json', JSON.stringify(machine.album),(error) =>{
+      if (error) throw error;
+    });
     if(VERBOSE) this.dumpLog();
     machine.stats = createStatistics(this.emptyBank, this.emptyDeck, this.ruleName, this.round,machine.log, machine.opt,machine.cnt);
     return machine.stats;
@@ -205,4 +214,11 @@ function createStatistics(win, deck, rule, rounds, moves, options, count) {
   stats.options=options;
   stats.count=count;
   return stats;
+}
+
+function createAlbum() {
+  let album = Object.create(null);
+  album.generation=new Array();
+  return album;
+
 }
