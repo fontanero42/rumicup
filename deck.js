@@ -110,10 +110,30 @@ export function factory() {
   return d1;
 }
 
+let id = 0;
+export function getUniqueId() {
+  return id++ + '';
+}
+export const removeUid = o => {
+  if (o) {
+    if (Object.getPrototypeOf(o) == Card.prototype) {
+      delete o.id;
+    }
+    if (Object.getPrototypeOf(o) == Object.prototype) {
+      Object.keys(o).forEach(k => removeUid(o[k]));
+    }
+    if (Object.getPrototypeOf(o) == Array.prototype) {
+      o.forEach(a => removeUid(a));
+    }
+  }
+}
+
 export class Card {
-  constructor(valor, color) {
+  constructor(valor, color,id='') {
     this.valor = parseInt(valor);
     this.color = color;
+    if(id=='')
+      this.id= getUniqueId();
   }
 
   toString() {
@@ -126,4 +146,19 @@ export class Card {
 
   static allColors = ["red", "blue", "black", "orange"];
 }
-
+/**
+const  c221=  new Card(4,'red');
+c221.imagine = true;
+const  c222=  new Card(5,'red');
+c222.imagine = false;
+const  c223=  new Card(6,'red');
+c223.imagine = false;
+let result25 = new Array(); 
+result25.push(
+ [
+    c221,
+    c222,
+    c223,
+]);
+removeUid(result25);
+*/
