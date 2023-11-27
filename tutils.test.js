@@ -13,8 +13,8 @@ const c17=new Card(9,'red');
 const c18=new Card(5,'red');
 
 const bank6 =[new Card(1,'orange'),
-c18,
 new Card(1,'red'),
+c18,
 new Card(4,'blue'),
 new Card(9,'black'),
 new Card(9,'blue'),
@@ -31,7 +31,7 @@ result6.push([c18,c14,c15,c16,c17]);
 test ('split card 5-red for sequence 2-9.red ',()  => {
     bank6.take= jest.fn();
     expect(splitCard(bank6, table6, cards6)).toEqual(result6);
-    expect(bank6.take).toHaveBeenCalled();
+    expect(bank6.take).toHaveBeenCalledWith(2,1);
 });
 const c30 =new Card(7,'orange');
 const c31 =new Card(8,'orange');
@@ -76,7 +76,7 @@ result22.push([c37,c33,c34,c35,c36]);
 test ('split card ',()  => {
     bank22.take= jest.fn();
     expect(splitCard(bank22, table22, cards22)).toEqual(result22);
-    expect(bank22.take).toHaveBeenCalled();
+    expect(bank22.take).toHaveBeenCalledWith(1,1);
 });
 const c50=new Card(8,'orange');
 const c51=new Card(9,'orange');
@@ -115,7 +115,7 @@ result23.push([c50,c51,c52,c53,c54,c55]);
     test ('plus card 7-orange',()  => {
         bank23.take= jest.fn();
         expect(plusCard(bank23, table23, cards23)).toEqual(result23);
-        expect(bank23.take).toHaveBeenCalled();
+        expect(bank23.take).toHaveBeenCalledWith(0,1);
 });
 const c60=new Card(4,'blue');
 const c61=new Card(4,'red');
@@ -153,7 +153,7 @@ result24.push([c64,c65,c66]);
 test ('plus card 4-black 2xtuple ',()  => {
     bank24.take= jest.fn();
     expect(plusCard(bank24, table24, cards24)).toEqual(result24);
-    expect(bank24.take).toHaveBeenCalled();
+    expect(bank24.take).toHaveBeenCalledWith(10,1);
 });
 const c70=new Card(4,'blue');
 const c71=new Card(4,'red');
@@ -182,7 +182,7 @@ result25.push([c70,c71, c72]);
 test ('new row vanilla tuple',()  => {
     bank25.take= jest.fn();
     expect(newRow(bank25, table25, cards25)).toEqual(result25);
-    expect(bank25.take).toHaveBeenCalled();
+    expect(bank25.take).toHaveBeenCalledTimes(3);
 });
 const c80=new Card(3,'red');
 const c81=new Card(4,'red');
@@ -213,7 +213,7 @@ result26.push([c80,c81,c82,c83]);
 test ('join card left 3-6.red',()  => {
     bank26.take= jest.fn();
     expect(joinCard(bank26, table26, cards26, 'left')).toEqual(result26);
-    expect(bank26.take).toHaveBeenCalled();
+    expect(bank26.take).toHaveBeenCalledWith(4,1);
 });
 const c90=new Card(4,'red');
 const c91=new Card(5,'red');
@@ -246,7 +246,7 @@ result27.push([c90,c91,c92,c93]);
 test ('join card right 4-7.red',()  => {
     bank27.take= jest.fn();
     expect(joinCard(bank27, table27, cards27, 'right')).toEqual(result27);
-    expect(bank27.take).toHaveBeenCalled();
+    expect(bank27.take).toHaveBeenCalledWith(4,1);
 });
 const c100=new Card(3,'red');
 const c101=new Card(4,'red');
@@ -282,5 +282,5 @@ result28.push([
 test ('join card left 3-6.red',()  => {
     bank28.take= jest.fn();
     expect(joinCard(bank28, table28, cards28, 'left')).toEqual(result28);
-    expect(bank28.take).toHaveBeenCalled();
+    expect(bank28.take).toHaveBeenCalledWith(4,1);
 });
